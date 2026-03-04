@@ -3,6 +3,9 @@
 /build/
 src/main/resources/docs/
 
+# vscode files
+.vscode/
+
 # IDEA files
 /.idea/
 /out/
