@@ -49,12 +49,12 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Role: Developer
 * Responsibilities: Dev Ops + Threading
 
-### Yap Jun Bin Daniel
+### James Doe
 
-<img src="images/danielyap4103.png" width="200px">
+<img src="images/johndoe.png" width="200px">
 
-[[github](http://github.com/danielyap4103)]
-[[portfolio](team/danielyap.md)]
+[[github](http://github.com/johndoe)]
+[[portfolio](team/johndoe.md)]
 
 * Role: Developer
 * Responsibilities: UI
