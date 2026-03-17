@@ -32,7 +32,11 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label id;
     @FXML
+    private Label phone;
+    @FXML
     private Label email;
+    @FXML
+    private Label studentId;
     @FXML
     private FlowPane tutorialGroup;
     @FXML
@@ -47,7 +51,9 @@ public class PersonCard extends UiPart<Region> {
         this.person = person;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
+        phone.setText(person.getPhone().value);
         email.setText(person.getEmail().value);
+        studentId.setText("placeholder ID");
         person.getTags().forEach(tag -> tutorialGroup.getChildren().add(new Label(tag.tagName)));
         attendanceTableManager = new AttendanceTable(attendanceTable);
     }
