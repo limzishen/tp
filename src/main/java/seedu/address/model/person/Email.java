@@ -6,6 +6,8 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 /**
  * Represents a Person's email in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidEmail(String)}
+ * Format: local-part@u.nus.edu.sg. Local part must contain only alphanumeric characters and/or
+ * special characters (+_.-), and the domain must be @u.nus.edu.sg.
  */
 public class Email {
 
@@ -22,28 +24,32 @@ public class Email {
     private static final String ALPHANUMERIC_NO_UNDERSCORE = "[^\\W_]+";
     private static final String LOCAL_PART_REGEX =
             "^" + ALPHANUMERIC_NO_UNDERSCORE + "([" + SPECIAL_CHARACTERS + "]" + ALPHANUMERIC_NO_UNDERSCORE + ")*";
-
     private static final String DOMAIN_REGEX = "@u\\.nus\\.edu\\.sg$";
-
     public static final String VALIDATION_REGEX = LOCAL_PART_REGEX + DOMAIN_REGEX;
 
     public final String value;
 
     /**
      * Constructs an {@code Email}.
+     * Leading and trailing spaces are trimmed.
      *
      * @param email A valid email address.
      */
     public Email(String email) {
         requireNonNull(email);
-        checkArgument(isValidEmail(email), MESSAGE_CONSTRAINTS);
-        value = email;
+        String trimmedEmail = email.trim();
+        checkArgument(isValidEmail(trimmedEmail), MESSAGE_CONSTRAINTS);
+        value = trimmedEmail;
     }
 
     /**
      * Returns if a given string is a valid email.
+     * Must match local-part@u.nus.edu.sg format.
      */
     public static boolean isValidEmail(String test) {
+        if (test == null) {
+            throw new NullPointerException();
+        }
         return test.matches(VALIDATION_REGEX);
     }
 

@@ -1,8 +1,9 @@
 {
   "persons": [ {
     "name": "Hans Muster",
+    "studentId": "A0123456X",
+    "email": "invalid-email",
     "phone": "9482424",
-    "email": "invalid@email!3e",
     "teleHandle": "@hans_muster"
   } ]
 }

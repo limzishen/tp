@@ -1,14 +1,16 @@
 {
   "persons": [ {
     "name": "Alice Pauline",
-    "phone": "94351253",
+    "studentId": "A0123456A",
     "email": "alice@u.nus.edu.sg",
+    "phone": "94351253",
     "teleHandle": "@alice_pauline",
     "tags": [ "friends" ]
   }, {
     "name": "Alice Pauline",
-    "phone": "94351253",
+    "studentId": "A0123456A",
     "email": "pauline@u.nus.edu.sg",
+    "phone": "94351253",
     "teleHandle": "@alice_pauline2"
   } ]
 }

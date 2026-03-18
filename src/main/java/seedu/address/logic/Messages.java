@@ -37,10 +37,12 @@ public class Messages {
     public static String format(Person person) {
         final StringBuilder builder = new StringBuilder();
         builder.append(person.getName())
-                .append("; Phone: ")
-                .append(person.getPhone())
+                .append("; Student ID: ")
+                .append(person.getStudentId())
                 .append("; Email: ")
                 .append(person.getEmail())
+                .append("; Phone: ")
+                .append(person.getPhone())
                 .append("; Telegram: ")
                 .append(person.getTeleHandle())
                 .append("; Tags: ");

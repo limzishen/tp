@@ -21,6 +21,7 @@ public class Person {
     private final Phone phone;
     private final Email email;
     private final TeleHandle teleHandle;
+    private final StudentId studentId;
 
     // Data fields
     private final Set<Tag> tags = new HashSet<>();
@@ -28,12 +29,13 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, TeleHandle teleHandle, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, teleHandle, tags);
+    public Person(Name name, Phone phone, Email email, TeleHandle teleHandle, StudentId studentId, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, teleHandle, studentId, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.teleHandle = teleHandle;
+        this.studentId = studentId;
         this.tags.addAll(tags);
     }
 
@@ -51,6 +53,10 @@ public class Person {
 
     public TeleHandle getTeleHandle() {
         return teleHandle;
+    }
+
+    public StudentId getStudentId() {
+        return studentId;
     }
 
     /**
@@ -71,7 +77,7 @@ public class Person {
         }
 
         return otherPerson != null
-                && otherPerson.getName().equals(getName());
+                && otherPerson.getStudentId().equals(getStudentId());
     }
 
     /**
@@ -94,21 +100,23 @@ public class Person {
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
                 && teleHandle.equals(otherPerson.teleHandle)
+                && studentId.equals(otherPerson.studentId)
                 && tags.equals(otherPerson.tags);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, teleHandle, tags);
+        return Objects.hash(name, phone, email, teleHandle, studentId, tags);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("name", name)
-                .add("phone", phone)
+                .add("studentId", studentId)
                 .add("email", email)
+                .add("phone", phone)
                 .add("teleHandle", teleHandle)
                 .add("tags", tags)
                 .toString();
