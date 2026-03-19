@@ -5,24 +5,27 @@ import static java.util.Objects.requireNonNull;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.model.Model;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.NameAndTutorialGroupPredicate;
 
 /**
- * Finds and lists all persons in address book whose name contains any of the argument keywords.
- * Keyword matching is case insensitive.
+ * Finds and lists all persons in address book whose name contains any of the argument keywords
+ * and/or whose tutorial group matches the specified tutorial group(s).
+ * Keyword matching for names is case insensitive.
  */
 public class FindCommand extends Command {
 
     public static final String COMMAND_WORD = "find";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all persons whose names contain any of "
-            + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
-            + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
-            + "Example: " + COMMAND_WORD + " alice bob charlie";
+            + "the specified keywords (case-insensitive) and/or belong to the specified tutorial group(s), and "
+            + "displays them as a list with index numbers.\n"
+            + "Parameters: [n/NAME_KEYWORD [MORE_KEYWORDS]...] [t/TUTORIAL_GROUP]...\n"
+            + "At least one of n/ or t/ must be present.\n"
+            + "Example: " + COMMAND_WORD + " n/alice bob t/T01";
 
-    private final NameContainsKeywordsPredicate predicate;
+    private final NameAndTutorialGroupPredicate predicate;
 
-    public FindCommand(NameContainsKeywordsPredicate predicate) {
+    public FindCommand(NameAndTutorialGroupPredicate predicate) {
         this.predicate = predicate;
     }
 

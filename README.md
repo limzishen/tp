@@ -69,13 +69,17 @@ Removes a student from the system by their 9-character student ID.
 
 ---
 
-### 3. Find a Student by Name
+### 3. Find a Student by Name or Tutorial Group
 
 ```
-find n/<NAME>
+find n/<NAME_KEYWORD> [MORE_KEYWORDS]... [t/<TUTORIAL_GROUP>]...
 ```
 
-Example: `find n/John` — finds all students with "John" in their name.
+Examples:
+
+- `find n/John` - finds all students with "John" in their name.
+- `find t/T01` - finds all students in tutorial group T01.
+- `find n/John t/T01` - finds students named "John" in tutorial group T01.
 
 Supports partial, case-insensitive matching.
 
@@ -103,7 +107,7 @@ All changes (add, delete, edit, mark, clear) are saved automatically to a local 
 |------------------|-----------------------------------------------------|
 | Add student      | `add n/<NAME> i/<STUDENT_ID> e/<EMAIL> t/<TUTORIAL_GROUP>` |
 | Delete student   | `delete i/<STUDENT_ID>`                             |
-| Find by name     | `find n/<NAME>`                                     |
+| Find by name or tutorial group | `find n/<NAME_KEYWORD> [MORE_KEYWORDS]... [t/<TUTORIAL_GROUP>]...` |
 | Mark attendance  | `mark w<WEEK> i/<STUDENT_ID>`                       |
 | List all         | `list`                                              |
 | Clear all        | `clear`                                             |
