@@ -14,6 +14,12 @@ public class NameAndTutorialGroupPredicate implements Predicate<Person> {
     private final List<String> nameKeywords;
     private final List<TutorialGroup> tutorialGroups;
 
+    /**
+     * Constructs a predicate that matches persons by name keywords and/or tutorial groups.
+     *
+     * @param nameKeywords   Name keywords to match (case-insensitive, full-word match).
+     * @param tutorialGroups Tutorial groups to match (exact match).
+     */
     public NameAndTutorialGroupPredicate(List<String> nameKeywords, List<TutorialGroup> tutorialGroups) {
         this.nameKeywords = nameKeywords;
         this.tutorialGroups = tutorialGroups;
