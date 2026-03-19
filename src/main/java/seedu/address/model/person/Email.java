@@ -6,47 +6,50 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 /**
  * Represents a Person's email in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidEmail(String)}
+ * Format: local-part@u.nus.edu. Local part must contain only alphanumeric characters and/or
+ * special characters (+_.-), and the domain must be @u.nus.edu.
  */
 public class Email {
 
     private static final String SPECIAL_CHARACTERS = "+_.-";
-    public static final String MESSAGE_CONSTRAINTS = "Emails should be of the format local-part@domain "
-            + "and adhere to the following constraints:\n"
-            + "1. The local-part should only contain alphanumeric characters and these special characters, excluding "
-            + "the parentheses, (" + SPECIAL_CHARACTERS + "). The local-part may not start or end with any special "
-            + "characters.\n"
-            + "2. This is followed by a '@' and then a domain name. The domain name is made up of domain labels "
-            + "separated by periods.\n"
-            + "The domain name must:\n"
-            + "    - end with a domain label at least 2 characters long\n"
-            + "    - have each domain label start and end with alphanumeric characters\n"
-            + "    - have each domain label consist of alphanumeric characters, separated only by hyphens, if any.";
+    public static final String MESSAGE_CONSTRAINTS = "Emails should be of the format local-part@u.nus.edu "
+        + "and adhere to the following constraints:\n"
+        + "1. The local-part should only contain alphanumeric characters and these special characters, excluding "
+        + "the parentheses, (" + SPECIAL_CHARACTERS + ").\n"
+        + "2. Each special character must be surrounded by alphanumeric characters "
+        + "(i.e. the local-part cannot start or end with a special character, and cannot contain consecutive special "
+        + "characters).\n"
+        + "3. The domain must be exactly u.nus.edu.";
     // alphanumeric and special characters
     private static final String ALPHANUMERIC_NO_UNDERSCORE = "[^\\W_]+";
     private static final String LOCAL_PART_REGEX =
             "^" + ALPHANUMERIC_NO_UNDERSCORE + "([" + SPECIAL_CHARACTERS + "]" + ALPHANUMERIC_NO_UNDERSCORE + ")*";
-
-    private static final String DOMAIN_REGEX = "@u\\.nus\\.edu\\.sg$";
-
+    private static final String DOMAIN_REGEX = "@u\\.nus\\.edu$";
     public static final String VALIDATION_REGEX = LOCAL_PART_REGEX + DOMAIN_REGEX;
 
     public final String value;
 
     /**
      * Constructs an {@code Email}.
+     * Leading and trailing spaces are trimmed.
      *
      * @param email A valid email address.
      */
     public Email(String email) {
         requireNonNull(email);
-        checkArgument(isValidEmail(email), MESSAGE_CONSTRAINTS);
-        value = email;
+        String trimmedEmail = email.trim();
+        checkArgument(isValidEmail(trimmedEmail), MESSAGE_CONSTRAINTS);
+        value = trimmedEmail;
     }
 
     /**
      * Returns if a given string is a valid email.
+     * Must match local-part@u.nus.edu format.
      */
     public static boolean isValidEmail(String test) {
+        if (test == null) {
+            throw new NullPointerException();
+        }
         return test.matches(VALIDATION_REGEX);
     }
 

@@ -1,14 +1,16 @@
 {
   "persons": [ {
     "name": "Alice Pauline",
+    "studentId": "A0123456A",
+    "email": "alice@u.nus.edu",
     "phone": "94351253",
-    "email": "alice@u.nus.edu.sg",
-    "address": "123, Jurong West Ave 6, #08-111",
-    "tags": [ "friends" ]
+    "teleHandle": "@alice_pauline",
+    "tags": [ "T01" ]
   }, {
     "name": "Alice Pauline",
+    "studentId": "A0123456A",
+    "email": "pauline@u.nus.edu",
     "phone": "94351253",
-    "email": "pauline@u.nus.edu.sg",
-    "address": "4th street"
+    "teleHandle": "@alice_pauline2"
   } ]
 }

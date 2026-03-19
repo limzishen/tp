@@ -9,8 +9,9 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Tag {
 
-    public static final String MESSAGE_CONSTRAINTS = "Tags names should be alphanumeric";
-    public static final String VALIDATION_REGEX = "\\p{Alnum}+";
+    public static final String MESSAGE_CONSTRAINTS =
+            "Tutorial group should start with 'T' followed by exactly 2 digits (e.g. T01, T12)";
+    public static final String VALIDATION_REGEX = "^T\\d{2}$";
 
     public final String tagName;
 

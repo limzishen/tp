@@ -10,11 +10,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.StudentId;
+import seedu.address.model.person.TeleHandle;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -27,20 +28,22 @@ class JsonAdaptedPerson {
     private final String name;
     private final String phone;
     private final String email;
-    private final String address;
+    private final String teleHandle;
+    private final String studentId;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
      */
     @JsonCreator
-    public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
-            @JsonProperty("email") String email, @JsonProperty("address") String address,
-            @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+    public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("studentId") String studentId,
+            @JsonProperty("email") String email, @JsonProperty("phone") String phone,
+            @JsonProperty("teleHandle") String teleHandle, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.name = name;
-        this.phone = phone;
+        this.studentId = studentId;
         this.email = email;
-        this.address = address;
+        this.phone = phone;
+        this.teleHandle = teleHandle;
         if (tags != null) {
             this.tags.addAll(tags);
         }
@@ -51,9 +54,10 @@ class JsonAdaptedPerson {
      */
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
-        phone = source.getPhone().value;
+        studentId = source.getStudentId().value;
         email = source.getEmail().value;
-        address = source.getAddress().value;
+        phone = source.getPhone().value;
+        teleHandle = source.getTeleHandle().value;
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
@@ -78,13 +82,14 @@ class JsonAdaptedPerson {
         }
         final Name modelName = new Name(name);
 
-        if (phone == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
+        if (studentId == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    StudentId.class.getSimpleName()));
         }
-        if (!Phone.isValidPhone(phone)) {
-            throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
+        if (!StudentId.isValidStudentId(studentId)) {
+            throw new IllegalValueException(StudentId.MESSAGE_CONSTRAINTS);
         }
-        final Phone modelPhone = new Phone(phone);
+        final StudentId modelStudentId = new StudentId(studentId);
 
         if (email == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
@@ -94,16 +99,25 @@ class JsonAdaptedPerson {
         }
         final Email modelEmail = new Email(email);
 
-        if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
+        if (phone == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
         }
-        if (!Address.isValidAddress(address)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
+        if (!Phone.isValidPhone(phone)) {
+            throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
         }
-        final Address modelAddress = new Address(address);
+        final Phone modelPhone = new Phone(phone);
+
+        if (teleHandle == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    TeleHandle.class.getSimpleName()));
+        }
+        if (!TeleHandle.isValidTeleHandle(teleHandle)) {
+            throw new IllegalValueException(TeleHandle.MESSAGE_CONSTRAINTS);
+        }
+        final TeleHandle modelTeleHandle = new TeleHandle(teleHandle);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelTags);
+        return new Person(modelName, modelPhone, modelEmail, modelTeleHandle, modelStudentId, modelTags);
     }
 
 }
