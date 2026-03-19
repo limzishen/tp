@@ -6,48 +6,55 @@
     "email" : "alice@u.nus.edu",
     "phone" : "94351253",
     "teleHandle" : "@alice_pauline",
-    "tags" : [ "T01" ]
+    "tags" : [ "T01" ],
+    "attendance" : [ false, false, false, false, false, false, false, false, false, false, false, false, false ]
   }, {
     "name" : "Benson Meier",
     "studentId" : "A0123456B",
     "email" : "johnd@u.nus.edu",
     "phone" : "98765432",
     "teleHandle" : "@benson_meier",
-    "tags" : [ "T02", "T01" ]
+    "tags" : [ "T02", "T01" ],
+    "attendance" : [ false, false, false, false, false, false, false, false, false, false, false, false, false ]
   }, {
     "name" : "Carl Kurz",
     "studentId" : "A0123456C",
     "email" : "heinz@u.nus.edu",
     "phone" : "95352563",
     "teleHandle" : "@carl_kurz",
-    "tags" : [ ]
+    "tags" : [ ],
+    "attendance" : [ false, false, false, false, false, false, false, false, false, false, false, false, false ]
   }, {
     "name" : "Daniel Meier",
     "studentId" : "A0123456D",
     "email" : "cornelia@u.nus.edu",
     "phone" : "87652533",
     "teleHandle" : "@daniel_meier",
-    "tags" : [ "T01" ]
+    "tags" : [ "T01" ],
+    "attendance" : [ false, false, false, false, false, false, false, false, false, false, false, false, false ]
   }, {
     "name" : "Elle Meyer",
     "studentId" : "A0123456E",
     "email" : "werner@u.nus.edu",
     "phone" : "94822240",
     "teleHandle" : "@elle_meyer",
-    "tags" : [ ]
+    "tags" : [ ],
+    "attendance" : [ false, false, false, false, false, false, false, false, false, false, false, false, false ]
   }, {
     "name" : "Fiona Kunz",
     "studentId" : "A0123456F",
     "email" : "lydia@u.nus.edu",
     "phone" : "94824270",
     "teleHandle" : "@fiona_kunz",
-    "tags" : [ ]
+    "tags" : [ ],
+    "attendance" : [ false, false, false, false, false, false, false, false, false, false, false, false, false ]
   }, {
     "name" : "George Best",
     "studentId" : "A0123456G",
     "email" : "anna@u.nus.edu",
     "phone" : "94824420",
     "teleHandle" : "@george_best",
-    "tags" : [ ]
+    "tags" : [ ],
+    "attendance" : [ false, false, false, false, false, false, false, false, false, false, false, false, false ]
   } ]
 }

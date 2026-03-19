@@ -30,7 +30,7 @@ public class AttendanceTest {
         attendance.markWeek(1);
         attendance.markWeek(3);
         attendance.markWeek(5);
-        
+
         assertTrue(attendance.isMarked(1));
         assertTrue(attendance.isMarked(3));
         assertTrue(attendance.isMarked(5));
@@ -44,7 +44,7 @@ public class AttendanceTest {
         for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
             attendance.markWeek(week);
         }
-        
+
         for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
             assertTrue(attendance.isMarked(week));
         }
@@ -114,7 +114,7 @@ public class AttendanceTest {
     public void toString_emptyAttendance_displaysAbsentForAllWeeks() {
         Attendance attendance = new Attendance();
         String result = attendance.toString();
-        
+
         for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
             assertTrue(result.contains("Week " + week + ": Absent"));
         }
@@ -126,9 +126,9 @@ public class AttendanceTest {
         attendance.markWeek(1);
         attendance.markWeek(5);
         attendance.markWeek(13);
-        
+
         String result = attendance.toString();
-        
+
         assertTrue(result.contains("Week 1: Attended"));
         assertTrue(result.contains("Week 2: Absent"));
         assertTrue(result.contains("Week 5: Attended"));
@@ -141,9 +141,9 @@ public class AttendanceTest {
         for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
             attendance.markWeek(week);
         }
-        
+
         String result = attendance.toString();
-        
+
         for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
             assertTrue(result.contains("Week " + week + ": Attended"));
         }
@@ -155,7 +155,7 @@ public class AttendanceTest {
         attendance.markWeek(5);
         attendance.markWeek(5);
         attendance.markWeek(5);
-        
+
         assertTrue(attendance.isMarked(5));
     }
 

@@ -343,7 +343,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 1. User requests to list students in a specific tutorial group.
 2. CLI-Tacts shows the list of students for that group.
-3. User requests to mark a specific student (by index or name) as "Present" for the current week.
+3. User requests to mark a specific student by index and the specific week
 4. CLI-Tacts updates the attendance record for that student.x
 5. CLI-Tacts confirms the attendance status change.
 

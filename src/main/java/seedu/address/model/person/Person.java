@@ -41,6 +41,34 @@ public class Person {
         this.tags.addAll(tags);
     }
 
+    /**
+     * Creates a Person with the specified attendance record.
+     * Every field must be present and not null.
+     * @param name the person's name
+     * @param phone the person's phone number
+     * @param email the person's email
+     * @param teleHandle the person's telegram handle
+     * @param studentId the person's student ID
+     * @param tags the person's tags
+     * @param attendance the person's attendance record
+     */
+    public Person(
+        Name name,
+        Phone phone,
+        Email email,
+        TeleHandle teleHandle,
+        StudentId studentId,
+        Set<Tag> tags, Attendance attendance) {
+        requireAllNonNull(name, phone, email, teleHandle, studentId, tags, attendance);
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.teleHandle = teleHandle;
+        this.studentId = studentId;
+        this.attendance = attendance;
+        this.tags.addAll(tags);
+    }
+
     public Name getName() {
         return name;
     }

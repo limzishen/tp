@@ -96,10 +96,63 @@ public class PersonTest {
     }
 
     @Test
+    public void equals_differentAttendance_returnsFalse() {
+        // same person with different attendance -> returns false
+        Attendance attendanceWithMarkedWeek = new Attendance().createCopyWithMarkedWeek(1);
+        Person aliceWithMarkedAttendance = new PersonBuilder(ALICE).withAttendance(attendanceWithMarkedWeek).build();
+        assertFalse(ALICE.equals(aliceWithMarkedAttendance));
+    }
+
+    @Test
+    public void equals_sameAttendance_returnsTrue() {
+        // same person with same attendance (both empty) -> returns true
+        Person aliceCopy = new PersonBuilder(ALICE).withAttendance(ALICE.getAttendance()).build();
+        assertTrue(ALICE.equals(aliceCopy));
+    }
+
+    @Test
+    public void getAttendance() {
+        Person person = new PersonBuilder().build();
+        assertFalse(person.getAttendance().isMarked(1));
+        assertFalse(person.getAttendance().isMarked(5));
+        assertFalse(person.getAttendance().isMarked(13));
+    }
+
+    @Test
+    public void constructorWithAttendance_createsPersonWithProvidedAttendance() {
+        // Create attendance with week 3 marked
+        Attendance customAttendance = new Attendance().createCopyWithMarkedWeek(3);
+        Person person = new PersonBuilder(ALICE).withAttendance(customAttendance).build();
+
+        // Verify the person has the same attendance
+        assertTrue(person.getAttendance().isMarked(3));
+        assertFalse(person.getAttendance().isMarked(1));
+        assertFalse(person.getAttendance().isMarked(2));
+    }
+
+    @Test
+    public void constructorWithAttendance_multipleWeeksMarked() {
+        // Create attendance with multiple weeks marked
+        Attendance customAttendance = new Attendance()
+                .createCopyWithMarkedWeek(1)
+                .createCopyWithMarkedWeek(5)
+                .createCopyWithMarkedWeek(13);
+        Person person = new PersonBuilder(ALICE).withAttendance(customAttendance).build();
+
+        // Verify the person has the correct attendance
+        assertTrue(person.getAttendance().isMarked(1));
+        assertTrue(person.getAttendance().isMarked(5));
+        assertTrue(person.getAttendance().isMarked(13));
+        assertFalse(person.getAttendance().isMarked(2));
+        assertFalse(person.getAttendance().isMarked(4));
+    }
+
+    @Test
     public void toStringMethod() {
         String expected = Person.class.getCanonicalName() + "{name=" + ALICE.getName() + ", studentId="
                 + ALICE.getStudentId() + ", email=" + ALICE.getEmail() + ", phone=" + ALICE.getPhone()
                 + ", teleHandle=" + ALICE.getTeleHandle() + ", tags=" + ALICE.getTags()
+                + ", attendance=" + ALICE.getAttendance()
                 + "}";
         assertEquals(expected, ALICE.toString());
     }

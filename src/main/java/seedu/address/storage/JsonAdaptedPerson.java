@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.model.person.Attendance;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -31,6 +32,7 @@ class JsonAdaptedPerson {
     private final String teleHandle;
     private final String studentId;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final List<Boolean> attendance = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -38,7 +40,8 @@ class JsonAdaptedPerson {
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("studentId") String studentId,
             @JsonProperty("email") String email, @JsonProperty("phone") String phone,
-            @JsonProperty("teleHandle") String teleHandle, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+            @JsonProperty("teleHandle") String teleHandle, @JsonProperty("tags") List<JsonAdaptedTag> tags,
+            @JsonProperty("attendance") List<Boolean> attendance) {
         this.name = name;
         this.studentId = studentId;
         this.email = email;
@@ -46,6 +49,9 @@ class JsonAdaptedPerson {
         this.teleHandle = teleHandle;
         if (tags != null) {
             this.tags.addAll(tags);
+        }
+        if (attendance != null) {
+            this.attendance.addAll(attendance);
         }
     }
 
@@ -61,6 +67,10 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        boolean[] attendanceRecord = source.getAttendance().getAttendanceRecord();
+        for (boolean isAttended : attendanceRecord) {
+            attendance.add(isAttended);
+        }
     }
 
     /**
@@ -117,7 +127,25 @@ class JsonAdaptedPerson {
         final TeleHandle modelTeleHandle = new TeleHandle(teleHandle);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelTeleHandle, modelStudentId, modelTags);
+
+        // Reconstruct attendance from the stored list
+        Attendance modelAttendance = new Attendance();
+        if (!attendance.isEmpty()) {
+            for (int i = 0; i < attendance.size() && i < Attendance.MAX_WEEKS; i++) {
+                if (attendance.get(i)) {
+                    modelAttendance.markWeek(i + 1);
+                }
+            }
+        }
+
+        return new Person(
+            modelName,
+            modelPhone,
+            modelEmail,
+            modelTeleHandle,
+            modelStudentId,
+            modelTags,
+            modelAttendance);
     }
 
 }
