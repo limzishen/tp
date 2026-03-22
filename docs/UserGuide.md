@@ -100,6 +100,8 @@ Examples:
 * `add n/Amy Bee i/A0123456X e/amy@u.nus.edu p/11111111 th/@amy_bee t/T01`
 * `add n/Bob Chan i/A0765432Y e/bobchan@u.nus.edu p/99998888 th/@bobchan t/T02`
 
+![add command](images/addCommand.png)
+
 ### Listing all persons : `list`
 
 Shows a list of all students currently in CLI-Tacts.
@@ -123,6 +125,8 @@ Examples:
 
 *  `edit 1 p/91234567 e/alice_new@u.nus.edu` Edits the phone number and email address of the 1st student.
 *  `edit 2 t/T03` Moves the 2nd student to tutorial group `T03`.
+
+![edit command](images/editCommand.png)
 
 ### Locating students by name and/or tutorial group: `find`
 
