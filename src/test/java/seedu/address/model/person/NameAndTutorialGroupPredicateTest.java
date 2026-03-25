@@ -16,9 +16,20 @@ public class NameAndTutorialGroupPredicateTest {
     public void test_nameKeywords_matchesName() {
         Person person = new PersonBuilder().withName("Alice Pauline").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("Alice", "Bob"), List.of());
+                new NameAndTutorialGroupPredicate(Arrays.asList("Alice", "Pauline"), List.of());
 
         assertTrue(predicate.test(person));
+    }
+
+    @Test
+    public void test_multipleNameWords_allKeywordsMustMatch() {
+        Person johnDoe = new PersonBuilder().withName("John Doe").withTutorialGroup("T01").build();
+        Person johnOng = new PersonBuilder().withName("John Ong").withTutorialGroup("T01").build();
+        NameAndTutorialGroupPredicate predicate =
+                new NameAndTutorialGroupPredicate(Arrays.asList("John", "Doe"), List.of());
+
+        assertTrue(predicate.test(johnDoe));
+        assertFalse(predicate.test(johnOng));
     }
 
     @Test

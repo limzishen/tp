@@ -145,6 +145,7 @@ At least one of `n/` or `t/` must be present.
 * **Characters**: the search term should only contain alphanumeric characters, spaces, hyphens (`-`), commas (`,`), and apostrophes (`'`).
 * **Case sensitivity**: case-insensitive. `find n/ALEX` is the same as `find n/alex`.
 * **Spacing**: leading and trailing spaces are ignored. Multiple internal spaces are treated as one.
+* **Multiple words**: if you enter more than one word after `n/` (separated by spaces), **every word must appear as a separate word in the student's name** (logical AND). For example, `find n/John Doe` matches **John Doe** but not **John Ong**.
 
 If an invalid name keyword is supplied, CLI-Tacts shows an error similar to:
 
@@ -167,7 +168,8 @@ If an invalid tutorial group is supplied, CLI-Tacts shows an error similar to:
 * If no students match, the list becomes empty and the status shows `0 persons listed!`.
 
 Examples:
-* `find n/John` — finds all students with “John” in their name.
+* `find n/John` — finds all students with “John” as a word in their name.
+* `find n/John Doe` — finds students whose name contains both words “John” and “Doe” as separate words.
 * `find t/T01` — finds all students from tutorial group `T01`.
 * `find n/Tan` — finds all students with “Tan” in their name (surname or given name).
 * `find n/john t/T01` — finds all students with “John” in their name **and** from tutorial group `T01`.
