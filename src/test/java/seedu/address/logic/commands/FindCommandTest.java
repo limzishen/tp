@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_PERSONS_LISTED_OVERVIEW;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.BENSON;
 import static seedu.address.testutil.TypicalPersons.CARL;
 import static seedu.address.testutil.TypicalPersons.DANIEL;
 import static seedu.address.testutil.TypicalPersons.ELLE;
@@ -21,7 +22,9 @@ import org.junit.jupiter.api.Test;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.NameAndTutorialGroupPredicate;
+import seedu.address.model.person.TeleHandle;
 import seedu.address.model.person.TutorialGroup;
 
 /**
@@ -34,9 +37,9 @@ public class FindCommandTest {
     @Test
     public void equals() {
         NameAndTutorialGroupPredicate firstPredicate =
-                new NameAndTutorialGroupPredicate(Collections.singletonList("first"), List.of());
+                new NameAndTutorialGroupPredicate(Collections.singletonList("first"), List.of(), List.of(), List.of());
         NameAndTutorialGroupPredicate secondPredicate =
-                new NameAndTutorialGroupPredicate(Collections.singletonList("second"), List.of());
+                new NameAndTutorialGroupPredicate(Collections.singletonList("second"), List.of(), List.of(), List.of());
 
         FindCommand findFirstCommand = new FindCommand(firstPredicate);
         FindCommand findSecondCommand = new FindCommand(secondPredicate);
@@ -61,7 +64,8 @@ public class FindCommandTest {
     @Test
     public void execute_zeroKeywords_noPersonFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0);
-        NameAndTutorialGroupPredicate predicate = new NameAndTutorialGroupPredicate(List.of(), List.of());
+        NameAndTutorialGroupPredicate predicate = new NameAndTutorialGroupPredicate(List.of(), List.of(), List.of(),
+                List.of());
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
@@ -72,7 +76,8 @@ public class FindCommandTest {
     public void execute_multipleKeywords_multiplePersonsFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3);
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(prepareNameKeywords("Kurz Elle Kunz"), List.of());
+                new NameAndTutorialGroupPredicate(prepareNameKeywords("Kurz Elle Kunz"), List.of(), List.of(),
+                        List.of());
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
@@ -83,7 +88,7 @@ public class FindCommandTest {
     public void execute_tutorialGroupOnly_multiplePersonsFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 2);
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(List.of(), List.of(new TutorialGroup("T01")));
+                new NameAndTutorialGroupPredicate(List.of(), List.of(new TutorialGroup("T01")), List.of(), List.of());
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
@@ -93,10 +98,32 @@ public class FindCommandTest {
     @Test
     public void toStringMethod() {
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("keyword"), List.of());
+                new NameAndTutorialGroupPredicate(Arrays.asList("keyword"), List.of(), List.of(), List.of());
         FindCommand findCommand = new FindCommand(predicate);
         String expected = FindCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";
         assertEquals(expected, findCommand.toString());
+    }
+
+    @Test
+    public void execute_emailOnly_onePersonFound() {
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
+        NameAndTutorialGroupPredicate predicate = new NameAndTutorialGroupPredicate(List.of(), List.of(),
+                List.of(new Email("alice@u.nus.edu")), List.of());
+        FindCommand command = new FindCommand(predicate);
+        expectedModel.updateFilteredPersonList(predicate);
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(Collections.singletonList(ALICE), model.getFilteredPersonList());
+    }
+
+    @Test
+    public void execute_teleHandleOnly_onePersonFound() {
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
+        NameAndTutorialGroupPredicate predicate = new NameAndTutorialGroupPredicate(List.of(), List.of(), List.of(),
+                List.of(new TeleHandle("@benson_meier")));
+        FindCommand command = new FindCommand(predicate);
+        expectedModel.updateFilteredPersonList(predicate);
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(Collections.singletonList(BENSON), model.getFilteredPersonList());
     }
 
     /**
