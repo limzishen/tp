@@ -34,12 +34,35 @@ public class Attendance {
     }
 
     /**
+     * Returns a copy of this Attendance with the specified week unmarked.
+     * @param week the week number to unmark (1-13)
+     * @return a new Attendance instance with the week unmarked
+     */
+    public Attendance createCopyWithUnmarkedWeek(int week) {
+        boolean[] newRecord = attendance.clone();
+        if (week >= 1 && week <= MAX_WEEKS) {
+            newRecord[week - 1] = false;
+        }
+        return new Attendance(newRecord);
+    }
+
+    /**
      * Marks the specified week as attended.
      * @param week the week number to mark (1-13)
      */
     public void markWeek(int week) {
         if (week >= 1 && week <= MAX_WEEKS) {
             attendance[week - 1] = true;
+        }
+    }
+
+    /**
+     * Unmarks the specified week as attended.
+     * @param week the week number to unmark (1-13)
+     */
+    public void unmarkWeek(int week) {
+        if (week >= 1 && week <= MAX_WEEKS) {
+            attendance[week - 1] = false;
         }
     }
 
