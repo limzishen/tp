@@ -19,6 +19,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Attendance;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.TutorialGroup;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for
@@ -119,6 +120,81 @@ public class MarkCommandTest {
     }
 
     @Test
+    public void execute_markTutorialGroup_success() {
+        TutorialGroup t01 = new TutorialGroup("T01");
+        int week = 5;
+        MarkCommand markCommand = new MarkCommand(t01, week);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        for (Person p : expectedModel.getAddressBook().getPersonList()) {
+            if (p.getTutorialGroup().equals(t01)) {
+                expectedModel.setPerson(p, createPersonWithMarkedWeek(p, week));
+            }
+        }
+
+        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_GROUP_SUCCESS,
+                week, t01.value, 2, 0);
+
+        assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_markTutorialGroup_skipsAlreadyMarked() {
+        TutorialGroup t01 = new TutorialGroup("T01");
+        int week = 3;
+
+        Person alice = model.getAddressBook().getPersonList().stream()
+                .filter(p -> p.getName().fullName.equals("Alice Pauline"))
+                .findFirst()
+                .orElseThrow();
+        model.setPerson(alice, createPersonWithMarkedWeek(alice, week));
+
+        MarkCommand markCommand = new MarkCommand(t01, week);
+
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Person aliceExpected = expectedModel.getAddressBook().getPersonList().stream()
+                .filter(p -> p.getName().fullName.equals("Alice Pauline"))
+                .findFirst()
+                .orElseThrow();
+        Person danielExpected = expectedModel.getAddressBook().getPersonList().stream()
+                .filter(p -> p.getName().fullName.equals("Daniel Meier"))
+                .findFirst()
+                .orElseThrow();
+        expectedModel.setPerson(aliceExpected, createPersonWithMarkedWeek(aliceExpected, week));
+        expectedModel.setPerson(danielExpected, createPersonWithMarkedWeek(danielExpected, week));
+
+        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_GROUP_SUCCESS,
+                week, t01.value, 1, 1);
+
+        assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_markTutorialGroup_allAlreadyMarked_success() {
+        TutorialGroup t01 = new TutorialGroup("T01");
+        int week = 4;
+        for (Person p : model.getAddressBook().getPersonList()) {
+            if (p.getTutorialGroup().equals(t01)) {
+                model.setPerson(p, createPersonWithMarkedWeek(p, week));
+            }
+        }
+
+        MarkCommand markCommand = new MarkCommand(t01, week);
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_GROUP_SUCCESS,
+                week, t01.value, 0, 2);
+
+        assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_markTutorialGroup_noStudents_throwsCommandException() {
+        MarkCommand markCommand = new MarkCommand(new TutorialGroup("T09"), 1);
+        assertCommandFailure(markCommand, model,
+                String.format(MarkCommand.MESSAGE_NO_STUDENTS_IN_GROUP, "T09"));
+    }
+
+    @Test
     public void equals() {
         MarkCommand markFirstCommand = new MarkCommand(INDEX_FIRST_PERSON, 1);
         MarkCommand markSecondCommand = new MarkCommand(INDEX_SECOND_PERSON, 1);
@@ -142,6 +218,12 @@ public class MarkCommandTest {
 
         // different week -> returns false
         assertFalse(markFirstCommand.equals(markFirstCommandWeek2));
+
+        MarkCommand markGroup = new MarkCommand(new TutorialGroup("T01"), 1);
+        MarkCommand markGroupCopy = new MarkCommand(new TutorialGroup("T01"), 1);
+        assertTrue(markGroup.equals(markGroupCopy));
+        assertFalse(markFirstCommand.equals(markGroup));
+        assertFalse(markGroup.equals(new MarkCommand(new TutorialGroup("T02"), 1)));
     }
 
     /**
