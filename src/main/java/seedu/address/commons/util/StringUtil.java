@@ -39,6 +39,34 @@ public class StringUtil {
     }
 
     /**
+     * Returns true if the {@code sentence} contains a word that starts with {@code prefix}.
+     * Ignores case, but a full word boundary is still required for the start of the match.
+     * <br>examples:<pre>
+     *       containsWordPrefixIgnoreCase("John Doe", "jo") == true
+     *       containsWordPrefixIgnoreCase("John Doe", "do") == true
+     *       containsWordPrefixIgnoreCase("John Doe", "oh") == false // not a word prefix
+     * </pre>
+     *
+     * @param sentence cannot be null
+     * @param prefix cannot be null, cannot be empty, must be a single word
+     */
+    public static boolean containsWordPrefixIgnoreCase(String sentence, String prefix) {
+        requireNonNull(sentence);
+        requireNonNull(prefix);
+
+        String preppedPrefix = prefix.trim();
+        checkArgument(!preppedPrefix.isEmpty(), "Prefix parameter cannot be empty");
+        checkArgument(preppedPrefix.split("\\s+").length == 1, "Prefix parameter should be a single word");
+
+        String[] wordsInSentence = sentence.split("\\s+");
+        String lowerPrefix = preppedPrefix.toLowerCase();
+
+        return Arrays.stream(wordsInSentence)
+                .map(String::toLowerCase)
+                .anyMatch(word -> word.startsWith(lowerPrefix));
+    }
+
+    /**
      * Returns a detailed message of the t, including the stack trace.
      */
     public static String getDetails(Throwable t) {

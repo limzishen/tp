@@ -16,7 +16,7 @@ public class NameAndTutorialGroupPredicateTest {
     public void test_nameKeywords_matchesName() {
         Person person = new PersonBuilder().withName("Alice Pauline").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("Alice", "Pauline"), List.of());
+                new NameAndTutorialGroupPredicate(Arrays.asList("Ali", "Pau"), List.of());
 
         assertTrue(predicate.test(person));
     }
@@ -26,10 +26,20 @@ public class NameAndTutorialGroupPredicateTest {
         Person johnDoe = new PersonBuilder().withName("John Doe").withTutorialGroup("T01").build();
         Person johnOng = new PersonBuilder().withName("John Ong").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("John", "Doe"), List.of());
+                new NameAndTutorialGroupPredicate(Arrays.asList("jo", "do"), List.of());
 
         assertTrue(predicate.test(johnDoe));
         assertFalse(predicate.test(johnOng));
+    }
+
+    @Test
+    public void test_singleLetterPrefix_matchesFirstLetter() {
+        Person johnDoe = new PersonBuilder().withName("John Doe").withTutorialGroup("T01").build();
+        Person maryJane = new PersonBuilder().withName("Mary Jane").withTutorialGroup("T01").build();
+        NameAndTutorialGroupPredicate predicate = new NameAndTutorialGroupPredicate(List.of("j"), List.of());
+
+        assertTrue(predicate.test(johnDoe));
+        assertTrue(predicate.test(maryJane)); // matches "Jane"
     }
 
     @Test
