@@ -275,13 +275,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​ | I want to …​ | So that I can…​ |
 | --- | --- | --- | --- |
-| `* * *` | CS2040S Teaching Assistant | add a student with name, student ID, email, and tutorial group | set up my tutorial groups at the start of the semester |
+| `* * *` | CS2040S Teaching Assistant | add a student with name, student ID, email, phone, tele handle, and tutorial group | set up my tutorial groups at the start of the semester |
 | `* * *` | CS2040S Teaching Assistant | edit a student’s contact details | keep records accurate when details change |
-| `* * *` | CS2040S Teaching Assistant | delete a student by student ID | remove students who drop the module or switch classes |
+| `* * *` | CS2040S Teaching Assistant | delete a student by their index in the displayed list | remove students who drop the module or switch classes |
 | `* * *` | CS2040S Teaching Assistant | find students by name (partial match) | locate a student quickly during class |
 | `* * *` | CS2040S Teaching Assistant | list all students | get an overview of who is under my care |
 | `* * *` | CS2040S Teaching Assistant | filter the student list by tutorial group | focus only on the current class I’m teaching |
 | `* * *` | CS2040S Teaching Assistant | mark a student as present for a specific week | track attendance quickly during live tutorials |
+| `* * *` | CS2040S Teaching Assistant | mark every student in a tutorial group for a week in one command | record whole-class attendance without repeating single-student marks |
 | `* *` | CS2040S Teaching Assistant | view students with low attendance | identify students who may need follow-up |
 | `* *` | CS2040S Teaching Assistant | export student and attendance records to a CSV | back up data or submit attendance reports |
 | `*` | CS2040S Teaching Assistant | archive or clear a semester’s data | reset the app cleanly for a new semester |
@@ -317,22 +318,22 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. User requests to add a student, providing their details and a tutorial group identifier (e.g., G04).
-2. CLI-Tacts validates the details and the tutorial group.
-3. CLI-Tacts adds the student to the specific tutorial group and saves the data locally.
+1. User requests to add a student, providing name, student ID, email, phone, tele handle, and tutorial group (e.g. `T01`).
+2. CLI-Tacts validates all fields.
+3. CLI-Tacts adds the student and saves the data locally.
 4. CLI-Tacts displays a success message with the student's details.
 
       Use case ends.
 
 **Extensions**
 
-1a. The tutorial group identifier is missing.
-   1a1. CLI-Tacts adds the student to a default "Unassigned" group.
+1a. Required field missing or invalid (including invalid tutorial group format).
+   1a1. CLI-Tacts shows an error message.
 
    Use case ends.
 
-2a. The student already exists in that tutorial group (Duplicate detected).
-   2a1. CLI-Tacts shows an error message indicating the student is already enrolled.
+2a. The student already exists in the address book (duplicate identity).
+   2a1. CLI-Tacts shows an error message.
 
    Use case ends.
 
@@ -340,37 +341,46 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. User requests to list students in a specific tutorial group.
-2. CLI-Tacts shows the list of students for that group.
-3. User requests to mark a specific student by index and the specific week
-4. CLI-Tacts updates the attendance record for that student.x
-5. CLI-Tacts confirms the attendance status change.
+1. User requests to view students (e.g. `list` or `find`).
+2. CLI-Tacts shows the filtered student list with indexes.
+3. User requests to mark a specific student using `mark INDEX w/WEEK`.
+4. CLI-Tacts updates the attendance record for that student.
+5. CLI-Tacts confirms the change and refreshes the list display.
 
       Use case ends.
 
 **Extensions**
 
-1a. The specified tutorial group does not exist.
-   1a1. CLI-Tacts shows an error message.
+* 2a. The list is empty.
 
-   Use case ends.
+  Use case ends.
 
-3a. The user provides an invalid index or name.
-   3a1. CLI-Tacts shows an error message.
+* 3a. The index is invalid.
+    * 3a1. CLI-Tacts shows an error message.
 
-   Use case resumes at step 2.
+      Use case resumes at step 2.
 
-3b. User wants to mark the entire group as present (Bulk action).
-   3b1. User enters a bulk command (e.g., markAll).
-   3b2. CLI-Tacts updates all students in the filtered list.
+* 3b. The student is already marked for that week (single-student command).
+    * 3b1. CLI-Tacts shows an error message.
 
-   Use case ends.
+      Use case resumes at step 2.
+
+* 3c. User marks an entire tutorial group with `mark t/TUTORIAL_GROUP w/WEEK`.
+    * 3c1. CLI-Tacts updates every student in storage with that tutorial group; already-marked students for that week are skipped.
+    * 3c2. CLI-Tacts reports counts of updated vs already-recorded students.
+
+      Use case ends.
+
+* 3d. No student has the given tutorial group (group mark).
+    * 3d1. CLI-Tacts shows an error message.
+
+      Use case ends.
 
 **Use case: Search up student to view attendance record**
 **MSS**
 
-1. User requests to find a student by name or student ID.
-2. CLI-Tacts searches the local database and finds the matching student.
+1. User requests to find students by name keywords and/or tutorial group (e.g. `find`).
+2. CLI-Tacts updates the visible list to matching students.
 3. CLI-Tacts displays the student's profile, including a summary of their attendance (eg., "Present: 5/6 weeks").
 4. CLI-Tacts provides a visual breakdown of which specific weeks were attended.
 

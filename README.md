@@ -28,10 +28,10 @@ CLI-Tacts is built for university Teaching Assistants (TAs) in CS2040S who:
 CLI-Tacts helps TAs efficiently manage student details and attendance across multiple tutorial groups through a fast CLI. By centralising student records locally, TAs can perform administrative tasks — adding, finding, marking, and removing students — without disrupting their real-time teaching flow.
 
 **What CLI-Tacts does:**
-- Add and manage student records (name, student ID, email, tutorial group)
-- Delete students who drop or change class
-- Search for students by name (partial matching supported)
-- Mark weekly attendance by student ID
+- Add and manage student records (name, student ID, email, phone, Telegram handle, tutorial group)
+- Edit or delete students using the displayed list index
+- Search by name keywords and/or tutorial group (`find`)
+- Mark attendance for one student (by index) or **mark an entire tutorial group at once**
 - Automatically save all changes to disk
 
 **What CLI-Tacts does NOT do:**
@@ -48,80 +48,100 @@ CLI-Tacts helps TAs efficiently manage student details and attendance across mul
 ### 1. Add a Student
 
 ```
-add n/<NAME> i/<STUDENT_ID> e/<EMAIL> t/<TUTORIAL_GROUP>
+add n/<NAME> i/<STUDENT_ID> e/<EMAIL> p/<PHONE> th/<TELE_HANDLE> t/<TUTORIAL_GROUP>
 ```
 
-Example: `add n/John Doe i/A0123456X e/e0123456@nus.edu.sg t/T12`
+Example: `add n/John Doe i/A0123456X e/johnd@u.nus.edu p/98765432 th/@john_doe t/T12`
 
-Adds a new student record. Duplicate student IDs are rejected.
+All fields are required. Duplicate student IDs (same identity in the address book) are rejected.
 
 ---
 
 ### 2. Delete a Student
 
 ```
-delete i/<STUDENT_ID>
+delete INDEX
 ```
 
-Example: `delete i/A0123456X`
-
-Removes a student from the system by their 9-character student ID.
+Example: `delete 2` — deletes the 2nd student in the **currently displayed** list (`list` or `find` first as needed).
 
 ---
 
-### 3. Find a Student by Name or Tutorial Group
+### 3. Find Students
 
 ```
-find n/<NAME_KEYWORD> [MORE_KEYWORDS]... [t/<TUTORIAL_GROUP>]...
+find [n/<NAME_KEYWORD> [MORE_KEYWORDS]...] [t/<TUTORIAL_GROUP>]...
 ```
+
+At least one of `n/` or `t/` must be present. Name matching is case-insensitive and supports several keywords (any match). Multiple `t/` values are allowed as in the full user guide.
 
 Examples:
-
-- `find n/John` - finds all students with "John" in their name.
-- `find t/T01` - finds all students in tutorial group T01.
-- `find n/John t/T01` - finds students named "John" in tutorial group T01.
-
-Supports partial, case-insensitive matching.
+- `find n/John`
+- `find t/T01`
+- `find n/alice bob t/T01`
 
 ---
 
 ### 4. Mark Attendance
 
+**One student** (index is relative to the **current** filtered list):
+
 ```
-mark w<WEEK_NUMBER> i/<STUDENT_ID>
+mark INDEX w/<WEEK>
 ```
 
-Example: `mark w3 i/A0123456X` — marks the student as present for Week 3.
+Example: `mark 1 w/3`
+
+**All students in a tutorial group** (everyone in storage with that group; does not depend on `find`):
+
+```
+mark t/<TUTORIAL_GROUP> w/<WEEK>
+```
+
+Example: `mark t/T02 w/2` — marks all students in `T02` for week 2. Already-marked students for that week are **skipped** (no error). If no student has that group, an error is shown.
+
+For the single-student form, marking the same student twice for the same week **errors**. Tutorial groups use `T` plus two digits (e.g. `T01`, `T12`).
 
 ---
 
-### 5. Auto-Save
+### 5. Other Commands
 
-All changes (add, delete, edit, mark, clear) are saved automatically to a local `data.json` file. Data is loaded on startup — no manual save needed.
+- **List:** `list` — show all students
+- **Edit:** `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]` — at least one field required
+- **Clear:** `clear` — remove all entries
+- **Help:** `help` — open help
+- **Exit:** `exit`
+
+---
+
+### 6. Auto-Save
+
+All data-changing commands save automatically. By default the address book is stored at **`data/addressbook.json`** (under the app’s home folder).
 
 ---
 
 ## Command Summary
 
-| Action           | Format                                              |
-|------------------|-----------------------------------------------------|
-| Add student      | `add n/<NAME> i/<STUDENT_ID> e/<EMAIL> t/<TUTORIAL_GROUP>` |
-| Delete student   | `delete i/<STUDENT_ID>`                             |
-| Find by name or tutorial group | `find n/<NAME_KEYWORD> [MORE_KEYWORDS]... [t/<TUTORIAL_GROUP>]...` |
-| Mark attendance  | `mark w<WEEK> i/<STUDENT_ID>`                       |
-| List all         | `list`                                              |
-| Clear all        | `clear`                                             |
-| Exit             | `exit`                                              |
+| Action | Format |
+|--------|--------|
+| Add | `add n/NAME i/STUDENT_ID e/EMAIL p/PHONE th/TELE_HANDLE t/TUTORIAL_GROUP` |
+| Delete | `delete INDEX` |
+| Edit | `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]` |
+| Find | `find` with at least one of `n/` or `t/` (see above) |
+| List | `list` |
+| Mark (one) | `mark INDEX w/WEEK` |
+| Mark (group) | `mark t/TUTORIAL_GROUP w/WEEK` |
+| Clear | `clear` |
+| Help | `help` |
+| Exit | `exit` |
 
 ---
 
 ## Notes on Command Format
 
-- Words in `UPPER_CASE` are parameters to be supplied by the user (e.g. `n/NAME` → `n/John Doe`).
-- Parameters can be entered in any order.
-- Extraneous parameters for commands that take no parameters (e.g. `list`, `exit`, `clear`) will be ignored.
-- Student IDs are case-insensitive (`A0123456X` = `a0123456x`).
-- Tutorial groups follow the format `T` followed by digits (e.g. `T01`, `T12`).
+- Words in `UPPER_CASE` are parameters (e.g. `n/NAME` → `n/John Doe`).
+- Unless stated otherwise, parameters can be reordered.
+- Extraneous parameters on `list`, `help`, `exit`, `clear` are ignored.
 
 ---
 

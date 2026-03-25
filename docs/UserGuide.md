@@ -162,7 +162,9 @@ If an invalid tutorial group is supplied, CLI-Tacts shows an error similar to:
 
 #### Combined filters
 
-* When both `n/` and `t/` are present, CLI-Tacts returns students who **match the name filter AND belong to the specified tutorial group**.
+* When both `n/` and at least one `t/` are present, CLI-Tacts returns students who **match the name filter AND match the tutorial-group filter** (same as for a single `t/`).
+* If you specify **multiple** `n/` values (or multiple words after one `n/`), a student matches the name part if **any** keyword matches part of their name (see name rules above).
+* If you specify **multiple** `t/` values (e.g. `find t/T01 t/T02`), a student matches the tutorial-group part if their group is **any** of those listed.
 * On success, the status bar shows e.g. `5 persons listed!` and the list shows only matching students.
 * If no students match, the list becomes empty and the status shows `0 persons listed!`.
 
@@ -171,6 +173,7 @@ Examples:
 * `find t/T01` — finds all students from tutorial group `T01`.
 * `find n/Tan` — finds all students with “Tan” in their name (surname or given name).
 * `find n/john t/T01` — finds all students with “John” in their name **and** from tutorial group `T01`.
+* `find n/alice bob` — same as keywords “alice” or “bob” in the name (see command format note: multiple words can be supplied).
 
 ### Deleting a person : `delete`
 
@@ -184,30 +187,48 @@ Format: `delete INDEX`
 
 Examples:
 * `list` followed by `delete 2` deletes the 2nd person in the address book.
-* `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+* `find n/Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 
 ### Marking attendance : `mark`
 
-Marks a student as present for a specific week during a tutorial session.
+CLI-Tacts supports two ways to mark attendance for a given **week** (positive integer, typically 1–13):
+
+#### Mark one student (by index)
 
 Format: `mark INDEX w/WEEK`
 
-Where:
-* `INDEX` refers to the index number shown in the displayed student list and **must be a positive integer** 1, 2, 3, …​
-* `WEEK` is the week number to mark attendance for and **must be a positive integer**
+* `INDEX` is the position in the **currently displayed** student list (`list`, `find`, …).
+* Use this when you want to mark a specific row. Running `mark` again for the **same** student and **same** week will show an error.
 
-#### Important notes:
-* Each student can be marked as attended only once per week. Attempting to mark the same student for the same week twice will result in an error.
-* After marking, the attendance status is updated immediately and saved automatically.
-* The `mark` command works with the currently displayed list. If you need to mark a specific student, use `find` first to filter the list, then use the appropriate index.
+After a successful mark, the list filter resets to show everyone again (same as after a single-person mark in the app).
 
-Examples:
-* `mark 1 w/2` — marks the 1st student in the displayed list as attended for week 2.
-* `find n/John` followed by `mark 1 w/1` — finds all students named "John" and marks the 1st result as attended for week 1.
-* `find t/T01` followed by `mark 3 w/4` — finds all students in tutorial group T01 and marks the 3rd result as attended for week 4.
+#### Mark all students in a tutorial group
 
-#### Attendance tracking:
-CLI-Tacts tracks attendance on a **per-week basis**. Each week's attendance is stored separately, allowing you to manage attendance records across the entire semester with a single command.
+Format: `mark t/TUTORIAL_GROUP w/WEEK`
+
+* `TUTORIAL_GROUP` uses the same `T` + two digits rule as in `add` / `edit` / `find` (e.g. `T01`, `T12`).
+* Applies to **every student stored** with that tutorial group, **not** only those visible after a `find`.
+* Students **already** marked for that week are **skipped** (no error). The result message states how many were updated and how many were already recorded.
+* If **no** student has that tutorial group, CLI-Tacts shows an error.
+
+#### Notes
+
+* Attendance updates and saving happen immediately after the command succeeds.
+* For the **index** form, use `find` (or `list`) first if you need a smaller list before choosing `INDEX`.
+
+Examples (single student):
+
+* `mark 1 w/2` — marks the 1st student in the displayed list for week 2.
+* `find n/John` followed by `mark 1 w/1` — among students named “John” in the filtered list, marks the 1st for week 1.
+* `find t/T01` followed by `mark 3 w/4` — in the T01-only list, marks the 3rd student for week 4.
+
+Example (whole group):
+
+* `mark t/T02 w/2` — marks all students in tutorial group `T02` for week 2.
+
+#### Attendance tracking
+
+Attendance is stored **per week**. Each week can be marked at most once per student; the index form enforces this with an error if you repeat the same week, while the group form skips students who are already marked for that week.
 
 ### Clearing all entries : `clear`
 
@@ -264,5 +285,5 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE_NUMBER] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]`<br> e.g.,`edit 2 n/James Lee t/T03`
 **Find** | `find n/NAME_KEYWORD [t/TUTORIAL_GROUP]`<br> e.g., `find n/James t/T01`
 **List** | `list`
-**Mark** | `mark INDEX w/WEEK`<br> e.g., `mark 1 w/2`
+**Mark** | `mark INDEX w/WEEK` <br> e.g., `mark 1 w/2` <br> `mark t/TUTORIAL_GROUP w/WEEK` (entire group) <br> e.g., `mark t/T02 w/2`
 **Help** | `help`
