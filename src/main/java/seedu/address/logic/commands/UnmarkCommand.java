@@ -100,7 +100,7 @@ public class UnmarkCommand extends Command {
                 personToUnmark.getName(),
                 personToUnmark.getPhone(),
                 personToUnmark.getEmail(),
-                personToUnmark.getTeleHandle(),
+                personToUnmark.getTeleHandle().orElse(null),
                 personToUnmark.getStudentId(),
                 personToUnmark.getTutorialGroup(),
                 updatedAttendance
@@ -135,7 +135,7 @@ public class UnmarkCommand extends Command {
                     person.getName(),
                     person.getPhone(),
                     person.getEmail(),
-                    person.getTeleHandle(),
+                    person.getTeleHandle().orElse(null),
                     person.getStudentId(),
                     person.getTutorialGroup(),
                     updatedAttendance
