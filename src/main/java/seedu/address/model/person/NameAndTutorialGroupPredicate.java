@@ -7,8 +7,8 @@ import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
 
 /**
- * Tests that a {@code Person}'s {@code Name} matches any of the keywords given and/or
- * the {@code TutorialGroup} matches any of the tutorial groups given.
+ * Tests that a {@code Person}'s {@code Name} matches all of the name keywords given (each as a word prefix,
+ * case-insensitive) and/or the {@code TutorialGroup} matches any of the tutorial groups given.
  */
 public class NameAndTutorialGroupPredicate implements Predicate<Person> {
     private final List<String> nameKeywords;
@@ -17,7 +17,7 @@ public class NameAndTutorialGroupPredicate implements Predicate<Person> {
     /**
      * Constructs a predicate that matches persons by name keywords and/or tutorial groups.
      *
-     * @param nameKeywords   Name keywords to match (case-insensitive, full-word match).
+     * @param nameKeywords   Name keywords to match; every keyword must match (case-insensitive, word-prefix match).
      * @param tutorialGroups Tutorial groups to match (exact match).
      */
     public NameAndTutorialGroupPredicate(List<String> nameKeywords, List<TutorialGroup> tutorialGroups) {
@@ -32,7 +32,7 @@ public class NameAndTutorialGroupPredicate implements Predicate<Person> {
         }
 
         boolean matchesName = nameKeywords.isEmpty() || nameKeywords.stream()
-                .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(person.getName().fullName, keyword));
+                .allMatch(keyword -> StringUtil.containsWordPrefixIgnoreCase(person.getName().fullName, keyword));
         boolean matchesTutorialGroup = tutorialGroups.isEmpty() || tutorialGroups.stream()
                 .anyMatch(group -> person.getTutorialGroup().value.equalsIgnoreCase(group.value));
 

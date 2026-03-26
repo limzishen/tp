@@ -160,6 +160,34 @@ public class AttendanceTest {
     }
 
     @Test
+    public void unmarkWeek_validWeek_unmarksSuccessfully() {
+        Attendance attendance = new Attendance();
+        attendance.markWeek(2);
+        attendance.unmarkWeek(2);
+        assertFalse(attendance.isMarked(2));
+    }
+
+    @Test
+    public void unmarkWeek_invalidWeek_doesNotChange() {
+        Attendance attendance = new Attendance();
+        attendance.markWeek(1);
+        attendance.unmarkWeek(0);
+        attendance.unmarkWeek(-1);
+        attendance.unmarkWeek(Attendance.MAX_WEEKS + 1);
+        assertTrue(attendance.isMarked(1));
+    }
+
+    @Test
+    public void createCopyWithUnmarkedWeek_unmarksCopyOnly() {
+        Attendance attendance = new Attendance();
+        attendance.markWeek(3);
+
+        Attendance updatedAttendance = attendance.createCopyWithUnmarkedWeek(3);
+        assertFalse(updatedAttendance.isMarked(3));
+        assertTrue(attendance.isMarked(3));
+    }
+
+    @Test
     public void maxWeeksConstant_isThirteen() {
         assertEquals(Attendance.MAX_WEEKS, 13);
     }

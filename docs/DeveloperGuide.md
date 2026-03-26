@@ -262,12 +262,12 @@ _{Explain here how the data archiving feature will be implemented}_
 **Target user profile**:
 
 * is a university student Teaching Assistant for CS2040S managing multiple tutorial/lab groups
-* needs to track student details and mark attendance quickly during live classes
+* needs to track student details and mark or unmark attendance quickly during live classes
 * prefers keyboard-only workflows and can type fast
 * finds GUI-based portals/spreadsheets too slow for real-time classroom administration
 * needs to organize students by tutorial/lab session for quick lookup
 
-**Value proposition**: CLI-Tacts helps CS2040S Teaching Assistants manage student contacts and attendance quickly via CLI by centralising student details and tutorial groupings locally, enabling fast administrative actions during tutorials without disrupting teaching flow.
+**Value proposition**: CLI-Tacts helps CS2040S Teaching Assistants manage student contacts and attendance quickly via CLI by centralising student details and tutorial groupings locally, enabling fast administrative actions (including marking and unmarking attendance) during tutorials without disrupting teaching flow.
 
 ### User stories
 
@@ -283,6 +283,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *` | CS2040S Teaching Assistant | filter the student list by tutorial group | focus only on the current class I’m teaching |
 | `* * *` | CS2040S Teaching Assistant | mark a student as present for a specific week | track attendance quickly during live tutorials |
 | `* * *` | CS2040S Teaching Assistant | mark every student in a tutorial group for a week in one command | record whole-class attendance without repeating single-student marks |
+| `* * *` | CS2040S Teaching Assistant | unmark a student's attendance for a specific week | correct attendance mistakes quickly during live tutorials |
 | `* *` | CS2040S Teaching Assistant | view students with low attendance | identify students who may need follow-up |
 | `* *` | CS2040S Teaching Assistant | export student and attendance records to a CSV | back up data or submit attendance reports |
 | `*` | CS2040S Teaching Assistant | archive or clear a semester’s data | reset the app cleanly for a new semester |
@@ -376,6 +377,36 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case ends.
 
+**Use case: Unmark student attendance**
+
+**MSS**
+
+1. User requests to list students in a specific tutorial group.
+2. CLI-Tacts shows the list of students for that group.
+3. User requests to unmark a specific student by index and the specific week.
+4. CLI-Tacts updates the attendance record for that student.
+5. CLI-Tacts confirms the attendance status change.
+
+   Use case ends.
+
+**Extensions**
+
+1a. The specified tutorial group does not exist.
+   1a1. CLI-Tacts shows an error message.
+
+   Use case ends.
+
+3a. The user provides an invalid index or week.
+   3a1. CLI-Tacts shows an error message.
+
+   Use case resumes at step 2.
+
+3b. User wants to unmark the entire group (Bulk action).
+   3b1. User enters a bulk command (e.g., `unmark t/T01 w/2`).
+   3b2. CLI-Tacts updates all marked students in the filtered list.
+
+   Use case ends.
+
 **Use case: Search up student to view attendance record**
 **MSS**
 
@@ -402,7 +433,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ### Non-Functional Requirements
 
 **Performance**
-1.  All commands (`add`, `delete`, `find`, `mark`) should return a response within 1 second when the dataset contains up to 200 students.
+1.  All commands (`add`, `delete`, `find`, `mark`, `unmark`) should return a response within 1 second when the dataset contains up to 200 students.
 2.  The application should launch and load stored data within 2 seconds for datasets up to 200 students.
 
 ---
@@ -417,7 +448,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Reliability**
 
-1.  All modifications to student data (`add`, `delete`, `mark`, `clear`) must be automatically saved immediately after execution.
+1.  All modifications to student data (`add`, `delete`, `mark`, `unmark`, `clear`) must be automatically saved immediately after execution.
 2.  On application startup, the system must automatically load previously saved data if the storage file exists and is valid.
 3.  If the storage file is corrupted, the system must display an error message and prevent overwriting the corrupted file.
 4.  The system should not lose more than 1 command's worth of changes in the event of an unexpected application crash.
@@ -461,20 +492,20 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Quality**
 1. The system should be usable by a teaching assistant who has no prior experience with command line applications after reading the user guide once.
-2. A new user should be able to successfully add a student and mark attendance within 5 minutes of first launching the application.
-3. The system should allow a user to complete common tasks such as finding a student or marking attendance with no more than one command.
+2. A new user should be able to successfully add a student and mark or unmark attendance within 5 minutes of first launching the application.
+3. The system should allow a user to complete common tasks such as finding a student or marking/unmarking attendance with no more than one command.
 
 ### Glossary
 
 * Application data directory: The folder on the user’s computer where CLI-Tacts stores its data file and preferences.
 
-* Command: A text instruction typed by the user into the command box to perform an action (e.g., add, delete, find, mark).
+* Command: A text instruction typed by the user into the command box to perform an action (e.g., add, delete, find, mark, unmark).
 
 * Command prefix: A token that identifies the value of a field in a command (e.g., n/ for name, i/ for student id, e/ for email, t/ for tutorial group).
 
 * Command result: The message returned by the system after executing a command, indicating success or failure.
 
-* Core features: The main functions needed for typical use in tutorials, including add, delete, find, mark, loading, and saving.
+* Core features: The main functions needed for typical use in tutorials, including add, delete, find, mark, unmark, loading, and saving.
 
 * Dataset: The complete set of student records stored by the application at a given time.
 
@@ -492,7 +523,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * Mainstream OS: Windows, macOS, or Linux operating systems.
 
-* Modifying command: Any command that changes stored data (e.g., add, delete, mark, clear).
+* Modifying command: Any command that changes stored data (e.g., add, delete, mark, unmark, clear).
 
 * Offline: The application can be used without an internet connection and without relying on any online services.
 
@@ -510,7 +541,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * Student id: The unique identifier for a student (e.g., A0123456X) used as the primary key for identifying a student in the application.
 
-* Tutorial group: A label used to group students by tutorial or lab session (e.g., T12) for filtering and attendance marking.
+* Tutorial group: A label used to group students by tutorial or lab session (e.g., T12) for filtering and attendance marking/unmarking.
 
 * Typical usage: Normal operation during a semester for a teaching assistant managing up to 200 students across multiple tutorial groups.
 

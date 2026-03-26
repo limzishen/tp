@@ -1,10 +1,12 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TUTORIAL_GROUP;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_WEEK;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.List;
+import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
@@ -13,26 +15,35 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Attendance;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.TutorialGroup;
 
 /**
- * Marks the attendance of an existing person in the address book.
+ * Marks the attendance of an existing person in the address book, or marks all students
+ * in a tutorial group for a given week.
  */
 public class MarkCommand extends Command {
 
     public static final String COMMAND_WORD = "mark";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Marks the person identified by the index number used in the displayed person list as attended.\n"
-            + "Parameters: INDEX (must be a positive integer) "
-            + PREFIX_WEEK + "WEEK (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1 "
-            + PREFIX_WEEK + "2";
+            + ": Marks attendance for one person by list index, or for everyone in a tutorial group.\n"
+            + "Parameters (single): INDEX (positive integer) "
+            + PREFIX_WEEK + "WEEK (positive integer)\n"
+            + "Parameters (group): " + PREFIX_TUTORIAL_GROUP + "TUTORIAL_GROUP "
+            + PREFIX_WEEK + "WEEK (positive integer)\n"
+            + "Example (single): " + COMMAND_WORD + " 1 " + PREFIX_WEEK + "2\n"
+            + "Example (group): " + COMMAND_WORD + " " + PREFIX_TUTORIAL_GROUP + "T02 " + PREFIX_WEEK + "2";
 
     public static final String MESSAGE_MARK_PERSON_SUCCESS = "Marked Person: %1$s";
-    public static final String MESSAGE_ALREADY_MARKED = "This person has already been marked"
-                                + " as attended for this week.";
+    public static final String MESSAGE_ALREADY_MARKED = "%1$s has already been marked"
+                                + " as attended for week %2$s.";
+    public static final String MESSAGE_MARK_GROUP_SUCCESS =
+            "Marked week %1$d for tutorial group %2$s: %3$d student(s) updated, %4$d already recorded for this week.";
+    public static final String MESSAGE_NO_STUDENTS_IN_GROUP = "No students found in tutorial group %1$s.";
+    public static final String MESSAGE_INVALID_WEEK = "Week must be a positive integer between 1 to 13.";
 
-    private final Index index;
+    private final Optional<Index> index;
+    private final Optional<TutorialGroup> tutorialGroup;
     private final int week;
 
     /**
@@ -41,30 +52,52 @@ public class MarkCommand extends Command {
      */
     public MarkCommand(Index index, int week) {
         requireNonNull(index);
-        requireNonNull(week);
-        this.index = index;
+        this.index = Optional.of(index);
+        this.tutorialGroup = Optional.empty();
+        this.week = week;
+    }
+
+    /**
+     * @param tutorialGroup tutorial group whose members are all marked for {@code week}
+     * @param week of the attendance to mark
+     */
+    public MarkCommand(TutorialGroup tutorialGroup, int week) {
+        requireNonNull(tutorialGroup);
+        this.index = Optional.empty();
+        this.tutorialGroup = Optional.of(tutorialGroup);
         this.week = week;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        if (tutorialGroup.isPresent()) {
+            return executeMarkTutorialGroup(model, tutorialGroup.get(), week);
+        }
+        // what happens if both index and tutorial group are present
+        // what happens if tutorial group is not present
+        // throw error in parser?
+        return executeMarkIndex(model, index.get(), week);
+    }
+
+    private CommandResult executeMarkIndex(Model model, Index index, int week) throws CommandException {
         List<Person> lastShownList = model.getFilteredPersonList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
+        if (week < 1 || week > Attendance.MAX_WEEKS) {
+            throw new CommandException(MESSAGE_INVALID_WEEK);
+        }
+
         Person personToMark = lastShownList.get(index.getZeroBased());
 
         if (personToMark.getAttendance().isMarked(week)) {
-            throw new CommandException(MESSAGE_ALREADY_MARKED);
+            throw new CommandException(String.format(MESSAGE_ALREADY_MARKED, personToMark.getName(), week));
         }
 
-        // Create a new attendance with the week marked
         Attendance updatedAttendance = personToMark.getAttendance().createCopyWithMarkedWeek(week);
-
-        // Create a new person with the updated attendance
         Person markedPerson = new Person(
                 personToMark.getName(),
                 personToMark.getPhone(),
@@ -75,11 +108,46 @@ public class MarkCommand extends Command {
                 updatedAttendance
         );
 
-        // Replace the old person with the new person
         model.setPerson(personToMark, markedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
         return new CommandResult(String.format(MESSAGE_MARK_PERSON_SUCCESS, Messages.format(markedPerson)));
+    }
+
+    private CommandResult executeMarkTutorialGroup(Model model, TutorialGroup group, int week)
+            throws CommandException {
+        List<Person> inGroup = model.getAddressBook().getPersonList().stream()
+                .filter(p -> p.getTutorialGroup().equals(group))
+                .toList();
+
+        if (inGroup.isEmpty()) {
+            throw new CommandException(String.format(MESSAGE_NO_STUDENTS_IN_GROUP, group.value));
+        }
+
+        int updated = 0;
+        int skipped = 0;
+        for (Person person : inGroup) {
+            if (person.getAttendance().isMarked(week)) {
+                skipped++;
+                continue;
+            }
+            Attendance updatedAttendance = person.getAttendance().createCopyWithMarkedWeek(week);
+            Person markedPerson = new Person(
+                    person.getName(),
+                    person.getPhone(),
+                    person.getEmail(),
+                    person.getTeleHandle(),
+                    person.getStudentId(),
+                    person.getTutorialGroup(),
+                    updatedAttendance
+            );
+            model.setPerson(person, markedPerson);
+            updated++;
+        }
+
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        return new CommandResult(
+                String.format(MESSAGE_MARK_GROUP_SUCCESS, week, group.value, updated, skipped));
     }
 
     @Override
@@ -88,19 +156,21 @@ public class MarkCommand extends Command {
             return true;
         }
 
-        // instanceof handles nulls
         if (!(other instanceof MarkCommand)) {
             return false;
         }
 
         MarkCommand otherMarkCommand = (MarkCommand) other;
-        return index.equals(otherMarkCommand.index) && week == otherMarkCommand.week;
+        return index.equals(otherMarkCommand.index)
+                && tutorialGroup.equals(otherMarkCommand.tutorialGroup)
+                && week == otherMarkCommand.week;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)
+                .add("tutorialGroup", tutorialGroup)
                 .add("week", week)
                 .toString();
     }

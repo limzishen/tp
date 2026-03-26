@@ -1,6 +1,8 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.Messages.getErrorMessageForDuplicatePrefixes;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TUTORIAL_GROUP;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_WEEK;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -10,6 +12,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.MarkCommand;
+import seedu.address.model.person.TutorialGroup;
 
 /**
  * As we are only doing white-box testing, our test cases do not cover path variations
@@ -26,6 +29,32 @@ public class MarkCommandParserTest {
     public void parse_validArgs_returnsMarkCommand() {
         assertParseSuccess(parser, "1 " + PREFIX_WEEK + "1", new MarkCommand(INDEX_FIRST_PERSON, 1));
         assertParseSuccess(parser, "2 " + PREFIX_WEEK + "5", new MarkCommand(INDEX_SECOND_PERSON, 5));
+    }
+
+    @Test
+    public void parse_validTutorialGroup_returnsMarkCommand() {
+        assertParseSuccess(parser, PREFIX_TUTORIAL_GROUP + "T01 " + PREFIX_WEEK + "2",
+                new MarkCommand(new TutorialGroup("T01"), 2));
+        assertParseSuccess(parser, PREFIX_TUTORIAL_GROUP + "T02 " + PREFIX_WEEK + "1",
+                new MarkCommand(new TutorialGroup("T02"), 1));
+    }
+
+    @Test
+    public void parse_indexWithTutorialGroup_throwsParseException() {
+        assertParseFailure(parser, "1 " + PREFIX_TUTORIAL_GROUP + "T01 " + PREFIX_WEEK + "1",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_duplicateWeek_throwsParseException() {
+        assertParseFailure(parser, PREFIX_TUTORIAL_GROUP + "T01 " + PREFIX_WEEK + "1 " + PREFIX_WEEK + "2",
+                getErrorMessageForDuplicatePrefixes(PREFIX_WEEK));
+    }
+
+    @Test
+    public void parse_invalidTutorialGroup_throwsParseException() {
+        assertParseFailure(parser, PREFIX_TUTORIAL_GROUP + "wrong " + PREFIX_WEEK + "1",
+                TutorialGroup.MESSAGE_CONSTRAINTS);
     }
 
     @Test

@@ -23,9 +23,11 @@ import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.MarkCommand;
+import seedu.address.logic.commands.UnmarkCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameAndTutorialGroupPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.TutorialGroup;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
@@ -59,6 +61,20 @@ public class AddressBookParserTest {
         MarkCommand command = (MarkCommand) parser.parseCommand(
                 MarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased() + " w/1");
         assertEquals(new MarkCommand(INDEX_FIRST_PERSON, 1), command);
+    }
+
+    @Test
+    public void parseCommand_unmark() throws Exception {
+        UnmarkCommand command = (UnmarkCommand) parser.parseCommand(
+                UnmarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased() + " w/1");
+        assertEquals(new UnmarkCommand(INDEX_FIRST_PERSON, 1), command);
+    }
+
+    @Test
+    public void parseCommand_markTutorialGroup() throws Exception {
+        MarkCommand command = (MarkCommand) parser.parseCommand(
+                MarkCommand.COMMAND_WORD + " t/T01 w/2");
+        assertEquals(new MarkCommand(new TutorialGroup("T01"), 2), command);
     }
 
     @Test

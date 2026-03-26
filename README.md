@@ -17,7 +17,7 @@ Instead of juggling fragmented spreadsheets or slow GUI-based portals, CLI-Tacts
 CLI-Tacts is built for university Teaching Assistants (TAs) in CS2040S who:
 
 - Manage 3–5 tutorial groups of ~20 students each
-- Need to mark attendance quickly during live sessions
+- Need to mark or unmark attendance quickly during live sessions
 - Are comfortable with CLI tools and value speed over clicking
 - Prefer locally-stored data over cloud-dependent portals
 
@@ -25,7 +25,7 @@ CLI-Tacts is built for university Teaching Assistants (TAs) in CS2040S who:
 
 ## Value Proposition
 
-CLI-Tacts helps TAs efficiently manage student details and attendance across multiple tutorial groups through a fast CLI. By centralising student records locally, TAs can perform administrative tasks — adding, finding, marking, and removing students — without disrupting their real-time teaching flow.
+CLI-Tacts helps TAs efficiently manage student details and attendance across multiple tutorial groups through a fast CLI. By centralising student records locally, TAs can perform administrative tasks — adding, finding, marking/unmarking attendance, and removing students — without disrupting their real-time teaching flow.
 
 **What CLI-Tacts does:**
 - Add and manage student records (name, student ID, email, phone, Telegram handle, tutorial group)

@@ -145,6 +145,8 @@ At least one of `n/` or `t/` must be present.
 * **Characters**: the search term should only contain alphanumeric characters, spaces, hyphens (`-`), commas (`,`), and apostrophes (`'`).
 * **Case sensitivity**: case-insensitive. `find n/ALEX` is the same as `find n/alex`.
 * **Spacing**: leading and trailing spaces are ignored. Multiple internal spaces are treated as one.
+* **Prefix matching**: each word you provide after `n/` is treated as a **prefix**. A student matches if their name contains a word that starts with that prefix (case-insensitive). For example, `find n/j` matches students with a name word starting with `j` (e.g. **John Doe**, **Mary Jane**).
+* **Multiple words**: if you enter more than one word after `n/` (separated by spaces), **every prefix must match** somewhere in the student's name (logical AND). For example, `find n/John Do` matches **John Doe** but not **John Ong**.
 
 If an invalid name keyword is supplied, CLI-Tacts shows an error similar to:
 
@@ -169,7 +171,9 @@ If an invalid tutorial group is supplied, CLI-Tacts shows an error similar to:
 * If no students match, the list becomes empty and the status shows `0 persons listed!`.
 
 Examples:
-* `find n/John` — finds all students with “John” in their name.
+* `find n/j` — finds students with a name word starting with `j`.
+* `find n/John` — finds students with a name word starting with `John`.
+* `find n/John Do` — finds students whose name contains a word starting with `John` and a word starting with `Do`.
 * `find t/T01` — finds all students from tutorial group `T01`.
 * `find n/Tan` — finds all students with “Tan” in their name (surname or given name).
 * `find n/john t/T01` — finds all students with “John” in their name **and** from tutorial group `T01`.
@@ -230,6 +234,29 @@ Example (whole group):
 
 Attendance is stored **per week**. Each week can be marked at most once per student; the index form enforces this with an error if you repeat the same week, while the group form skips students who are already marked for that week.
 
+### Unmarking attendance : `unmark`
+
+Unmarks a student's attendance for a specific week during a tutorial session.
+
+Formats:
+
+* `unmark INDEX w/WEEK`
+* `unmark t/TUTORIAL_GROUP w/WEEK`
+
+Where:
+* `INDEX` refers to the index number shown in the displayed student list and **must be a positive integer** 1, 2, 3, â€¦â€‹
+* `WEEK` is the week number to unmark attendance for and **must be a positive integer**
+* `TUTORIAL_GROUP` must be `T` followed by exactly 2 digits (e.g., `T01`, `T12`)
+
+#### Important notes:
+* If the student is already unmarked for the specified week, CLI-Tacts will show an error.
+* For group unmark, `t/` is required (e.g., `unmark t/T01 w/2`).
+* Group unmark errors if there are no students in the specified tutorial group, or if all students are already unmarked for that week.
+
+Examples:
+* `unmark 1 w/2` â€” unmarks the 1st student in the displayed list for week 2.
+* `unmark t/T01 w/4` â€” unmarks attendance for all marked students in tutorial group T01 for week 4.
+
 ### Clearing all entries : `clear`
 
 Clears all entries from CLI-Tacts.
@@ -285,5 +312,6 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE_NUMBER] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]`<br> e.g.,`edit 2 n/James Lee t/T03`
 **Find** | `find n/NAME_KEYWORD [t/TUTORIAL_GROUP]`<br> e.g., `find n/James t/T01`
 **List** | `list`
-**Mark** | `mark INDEX w/WEEK` <br> e.g., `mark 1 w/2` <br> `mark t/TUTORIAL_GROUP w/WEEK` (entire group) <br> e.g., `mark t/T02 w/2`
+**Mark** | `mark INDEX w/WEEK`<br> e.g., `mark 1 w/2`
+**Unmark** | `unmark INDEX w/WEEK`<br> e.g., `unmark 1 w/2` or `unmark t/T01 w/2`
 **Help** | `help`
