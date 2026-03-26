@@ -10,7 +10,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.NameAndTutorialGroupPredicate;
+import seedu.address.model.person.TeleHandle;
 import seedu.address.model.person.TutorialGroup;
 
 public class FindCommandParserTest {
@@ -43,7 +45,8 @@ public class FindCommandParserTest {
     public void parse_validArgs_returnsFindCommand() {
         // no leading and trailing whitespaces
         FindCommand expectedFindCommand =
-                new FindCommand(new NameAndTutorialGroupPredicate(Arrays.asList("Alice", "Bob"), List.of()));
+                new FindCommand(new NameAndTutorialGroupPredicate(Arrays.asList("Alice", "Bob"),
+                        List.of(), List.of(), List.of()));
         assertParseSuccess(parser, " n/Alice Bob", expectedFindCommand);
 
         // multiple whitespaces between keywords
@@ -51,8 +54,21 @@ public class FindCommandParserTest {
 
         // tutorial group only
         FindCommand expectedFindCommandByTutorial =
-                new FindCommand(new NameAndTutorialGroupPredicate(List.of(), List.of(new TutorialGroup("T01"))));
+                new FindCommand(new NameAndTutorialGroupPredicate(List.of(),
+                        List.of(new TutorialGroup("T01")), List.of(), List.of()));
         assertParseSuccess(parser, " t/T01 ", expectedFindCommandByTutorial);
+
+        // email only
+        FindCommand expectedFindCommandByEmail =
+                new FindCommand(new NameAndTutorialGroupPredicate(List.of(), List.of(),
+                        List.of(new Email("alice@u.nus.edu")), List.of()));
+        assertParseSuccess(parser, " e/alice@u.nus.edu ", expectedFindCommandByEmail);
+
+        // telehandle only
+        FindCommand expectedFindCommandByTele =
+                new FindCommand(new NameAndTutorialGroupPredicate(List.of(), List.of(),
+                        List.of(), List.of(new TeleHandle("@alice"))));
+        assertParseSuccess(parser, " th/@alice ", expectedFindCommandByTele);
     }
 
 }

@@ -16,7 +16,7 @@ public class NameAndTutorialGroupPredicateTest {
     public void test_nameKeywords_matchesName() {
         Person person = new PersonBuilder().withName("Alice Pauline").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("Ali", "Pau"), List.of());
+                new NameAndTutorialGroupPredicate(Arrays.asList("Alice", "Pau"), List.of(), List.of(), List.of());
 
         assertTrue(predicate.test(person));
     }
@@ -26,7 +26,7 @@ public class NameAndTutorialGroupPredicateTest {
         Person johnDoe = new PersonBuilder().withName("John Doe").withTutorialGroup("T01").build();
         Person johnOng = new PersonBuilder().withName("John Ong").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("jo", "do"), List.of());
+                new NameAndTutorialGroupPredicate(Arrays.asList("jo", "do"), List.of(), List.of(), List.of());
 
         assertTrue(predicate.test(johnDoe));
         assertFalse(predicate.test(johnOng));
@@ -36,7 +36,8 @@ public class NameAndTutorialGroupPredicateTest {
     public void test_singleLetterPrefix_matchesFirstLetter() {
         Person johnDoe = new PersonBuilder().withName("John Doe").withTutorialGroup("T01").build();
         Person maryJane = new PersonBuilder().withName("Mary Jane").withTutorialGroup("T01").build();
-        NameAndTutorialGroupPredicate predicate = new NameAndTutorialGroupPredicate(List.of("j"), List.of());
+        NameAndTutorialGroupPredicate predicate =
+                new NameAndTutorialGroupPredicate(List.of("j"), List.of(), List.of(), List.of());
 
         assertTrue(predicate.test(johnDoe));
         assertTrue(predicate.test(maryJane)); // matches "Jane"
@@ -46,7 +47,7 @@ public class NameAndTutorialGroupPredicateTest {
     public void test_tutorialGroup_matchesTutorialGroup() {
         Person person = new PersonBuilder().withName("Alice Pauline").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(List.of(), List.of(new TutorialGroup("T01")));
+                new NameAndTutorialGroupPredicate(List.of(), List.of(new TutorialGroup("T01")), List.of(), List.of());
 
         assertTrue(predicate.test(person));
     }
@@ -55,24 +56,49 @@ public class NameAndTutorialGroupPredicateTest {
     public void test_bothNameAndTutorialGroup_mustMatchBoth() {
         Person person = new PersonBuilder().withName("Alice Pauline").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(List.of("Alice"), List.of(new TutorialGroup("T01")));
+                new NameAndTutorialGroupPredicate(List.of("Alice"), List.of(new TutorialGroup("T01")), List.of(),
+                        List.of());
 
         assertTrue(predicate.test(person));
 
         NameAndTutorialGroupPredicate nameMismatch =
-                new NameAndTutorialGroupPredicate(List.of("Bob"), List.of(new TutorialGroup("T01")));
+                new NameAndTutorialGroupPredicate(List.of("Bob"), List.of(new TutorialGroup("T01")), List.of(),
+                        List.of());
         assertFalse(nameMismatch.test(person));
 
         NameAndTutorialGroupPredicate tutorialMismatch =
-                new NameAndTutorialGroupPredicate(List.of("Alice"), List.of(new TutorialGroup("T02")));
+                new NameAndTutorialGroupPredicate(List.of("Alice"), List.of(new TutorialGroup("T02")), List.of(),
+                        List.of());
         assertFalse(tutorialMismatch.test(person));
+    }
+
+    @Test
+    public void test_email_matchesEmail() {
+        Person person = new PersonBuilder().withName("Alice Pauline").withEmail("alice@u.nus.edu")
+                .withTutorialGroup("T01").build();
+        NameAndTutorialGroupPredicate predicate =
+                new NameAndTutorialGroupPredicate(List.of(), List.of(),
+                        List.of(new Email("alice@u.nus.edu")), List.of());
+
+        assertTrue(predicate.test(person));
+    }
+
+    @Test
+    public void test_teleHandle_matchesTeleHandle() {
+        Person person = new PersonBuilder().withName("Alice Pauline").withTeleHandle("@alice_pauline")
+                .withTutorialGroup("T01").build();
+        NameAndTutorialGroupPredicate predicate =
+                new NameAndTutorialGroupPredicate(List.of(), List.of(), List.of(),
+                        List.of(new TeleHandle("@alice_pauline")));
+
+        assertTrue(predicate.test(person));
     }
 
     @Test
     public void test_emptyCriteria_returnsFalse() {
         Person person = new PersonBuilder().withName("Alice Pauline").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(List.of(), List.of());
+                new NameAndTutorialGroupPredicate(List.of(), List.of(), List.of(), List.of());
 
         assertFalse(predicate.test(person));
     }
@@ -80,13 +106,15 @@ public class NameAndTutorialGroupPredicateTest {
     @Test
     public void equals() {
         NameAndTutorialGroupPredicate firstPredicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("Alice"), List.of(new TutorialGroup("T01")));
+                new NameAndTutorialGroupPredicate(Arrays.asList("Alice"), List.of(new TutorialGroup("T01")), List.of(),
+                        List.of());
         NameAndTutorialGroupPredicate secondPredicate =
-                new NameAndTutorialGroupPredicate(Arrays.asList("Bob"), List.of(new TutorialGroup("T02")));
+                new NameAndTutorialGroupPredicate(Arrays.asList("Bob"), List.of(new TutorialGroup("T02")), List.of(),
+                        List.of());
 
         assertTrue(firstPredicate.equals(firstPredicate));
         assertTrue(firstPredicate.equals(new NameAndTutorialGroupPredicate(
-                Arrays.asList("Alice"), List.of(new TutorialGroup("T01")))));
+                Arrays.asList("Alice"), List.of(new TutorialGroup("T01")), List.of(), List.of())));
         assertFalse(firstPredicate.equals(1));
         assertFalse(firstPredicate.equals(null));
         assertFalse(firstPredicate.equals(secondPredicate));

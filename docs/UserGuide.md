@@ -128,17 +128,19 @@ Examples:
 
 ![edit command](images/editCommand.png)
 
-### Locating students by name and/or tutorial group: `find`
+### Locating students by name, tutorial group, email, or telegram handle: `find`
 
-Allows a TA to **filter the student list** to find specific individuals based on their names and/or tutorial group. This is useful when the matric number (student ID) is not immediately known.
+Allows a TA to **filter the student list** to find specific individuals based on their name, tutorial group, NUS email, or Telegram handle. This is useful when the matric number (student ID) is not immediately known.
 
 Formats:
 
 * `find n/NAME_KEYWORD`
 * `find t/TUTORIAL_GROUP`
-* `find n/NAME_KEYWORD t/TUTORIAL_GROUP`
+* `find e/EMAIL`
+* `find th/TELE_HANDLE`
+* You can combine any of the above prefixes in one command (e.g. `find n/john t/T01 e/alice@u.nus.edu th/@alice_bot`).
 
-At least one of `n/` or `t/` must be present.
+At least one of `n/`, `t/`, `e/`, or `th/` must be present.
 
 #### Name (`n/`) filter
 
@@ -162,11 +164,19 @@ If an invalid tutorial group is supplied, CLI-Tacts shows an error similar to:
 
 > Invalid tutorial group. Format should be T followed by two digits (e.g., T01).
 
+#### Email (`e/`) filter
+
+* **Format**: must be a valid NUS email ending with `@u.nus.edu` (same rules as `add` / `edit`).
+* **Case sensitivity**: matching is case-insensitive for the local-part and domain.
+
+#### Telegram handle (`th/`) filter
+
+* **Format**: must be a valid Telegram handle (same rules as `add` / `edit`), starting with `@`.
+* **Case sensitivity**: handles are stored in lowercase; matching is case-insensitive (e.g. `th/@ALICE` matches `@alice`).
+
 #### Combined filters
 
-* When both `n/` and at least one `t/` are present, CLI-Tacts returns students who **match the name filter AND match the tutorial-group filter** (same as for a single `t/`).
-* If you specify **multiple** `n/` values (or multiple words after one `n/`), a student matches the name part if **any** keyword matches part of their name (see name rules above).
-* If you specify **multiple** `t/` values (e.g. `find t/T01 t/T02`), a student matches the tutorial-group part if their group is **any** of those listed.
+* When multiple filters are present, CLI-Tacts returns students who **match all specified filter categories** (AND across `n/`, `t/`, `e/`, `th/`).
 * On success, the status bar shows e.g. `5 persons listed!` and the list shows only matching students.
 * If no students match, the list becomes empty and the status shows `0 persons listed!`.
 
@@ -175,6 +185,8 @@ Examples:
 * `find n/John` — finds students with a name word starting with `John`.
 * `find n/John Do` — finds students whose name contains a word starting with `John` and a word starting with `Do`.
 * `find t/T01` — finds all students from tutorial group `T01`.
+* `find e/alice@u.nus.edu` — finds the student with that email (if present).
+* `find th/@benson_meier` — finds the student with that Telegram handle (if present).
 * `find n/Tan` — finds all students with “Tan” in their name (surname or given name).
 * `find n/john t/T01` — finds all students with “John” in their name **and** from tutorial group `T01`.
 * `find n/alice bob` — same as keywords “alice” or “bob” in the name (see command format note: multiple words can be supplied).
@@ -310,7 +322,7 @@ Action | Format, Examples
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE_NUMBER] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]`<br> e.g.,`edit 2 n/James Lee t/T03`
-**Find** | `find n/NAME_KEYWORD [t/TUTORIAL_GROUP]`<br> e.g., `find n/James t/T01`
+**Find** | `find [n/NAME_KEYWORD] [t/TUTORIAL_GROUP] [e/EMAIL] [th/TELE_HANDLE]`<br> e.g., `find n/James t/T01 e/james@u.nus.edu`
 **List** | `list`
 **Mark** | `mark INDEX w/WEEK`<br> e.g., `mark 1 w/2`
 **Unmark** | `unmark INDEX w/WEEK`<br> e.g., `unmark 1 w/2` or `unmark t/T01 w/2`
