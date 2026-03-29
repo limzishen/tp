@@ -31,7 +31,7 @@
       <Label fx:id="phone" styleClass="cell_small_label" text="$phone" />
       <Label fx:id="teleHandle" styleClass="cell_small_label" text="$teleHandle" />
       <Label fx:id="tutorialGroup" styleClass="cell_small_label" />
-      <GridPane fx:id="attendanceTable" style="-fx-border-color: #cccccc; -fx-border-width: 1;" VBox.vgrow="SOMETIMES">
+      <GridPane fx:id="attendanceTable" style="-fx-border-color: #334155; -fx-border-width: 1;" VBox.vgrow="SOMETIMES">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" prefWidth="35" />
           <ColumnConstraints hgrow="SOMETIMES" prefWidth="35" />

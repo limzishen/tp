@@ -25,6 +25,9 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
     private static final String CELL_STYLE_CLASS = "attendance-statistics-cell";
     private static final String HEADER_STYLE_CLASS = "attendance-statistics-header";
     private static final String FIRST_COLUMN_STYLE_CLASS = "attendance-statistics-first-column";
+    private static final String RATE_HIGH_CLASS = "attendance-rate-high";
+    private static final String RATE_MEDIUM_CLASS = "attendance-rate-medium";
+    private static final String RATE_LOW_CLASS = "attendance-rate-low";
     private static final double FIRST_COLUMN_WIDTH = 100;
     private static final double WEEK_COLUMN_WIDTH = 50;
     private static final double RATE_COLUMN_WIDTH = 60;
@@ -111,6 +114,7 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
                         : (double) attendanceCount / studentsInGroup.size() * 100;
                 Label rateCell = new Label(String.format("%.0f%%", attendanceRate));
                 rateCell.getStyleClass().add(CELL_STYLE_CLASS);
+                applyAttendanceRateTierStyle(rateCell, attendanceRate);
                 rateCell.setPrefWidth(WEEK_COLUMN_WIDTH);
                 statisticsGrid.add(rateCell, week, rowIndex);
             }
@@ -118,6 +122,7 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
             double overallRate = possibleAttendance == 0 ? 0 : (double) totalAttendance / possibleAttendance * 100;
             Label overallRateLabel = new Label(String.format("%.1f%%", overallRate));
             overallRateLabel.getStyleClass().add(CELL_STYLE_CLASS);
+            applyAttendanceRateTierStyle(overallRateLabel, overallRate);
             overallRateLabel.setPrefWidth(RATE_COLUMN_WIDTH);
             statisticsGrid.add(overallRateLabel, Attendance.MAX_WEEKS + 1, rowIndex);
 
@@ -145,6 +150,7 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
             double attendanceRate = personList.isEmpty() ? 0 : (double) attendanceCount / personList.size() * 100;
             Label rateCell = new Label(String.format("%.0f%%", attendanceRate));
             rateCell.getStyleClass().add(CELL_STYLE_CLASS);
+            applyAttendanceRateTierStyle(rateCell, attendanceRate);
             rateCell.setPrefWidth(WEEK_COLUMN_WIDTH);
             statisticsGrid.add(rateCell, week, rowIndex);
         }
@@ -152,7 +158,22 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
         double overallRate = totalAllPossible == 0 ? 0 : (double) totalAllAttendance / totalAllPossible * 100;
         Label overallRateLabel = new Label(String.format("%.1f%%", overallRate));
         overallRateLabel.getStyleClass().add(CELL_STYLE_CLASS);
+        applyAttendanceRateTierStyle(overallRateLabel, overallRate);
         overallRateLabel.setPrefWidth(RATE_COLUMN_WIDTH);
         statisticsGrid.add(overallRateLabel, Attendance.MAX_WEEKS + 1, rowIndex);
+    }
+
+    /**
+     * Colors percentage cells by tier: high ({@code >= 80%}), medium ({@code 50%}–{@code 79%}), low ({@code < 50%}).
+     */
+    private void applyAttendanceRateTierStyle(Label label, double ratePercent) {
+        label.getStyleClass().removeAll(RATE_HIGH_CLASS, RATE_MEDIUM_CLASS, RATE_LOW_CLASS);
+        if (ratePercent >= 80.0) {
+            label.getStyleClass().add(RATE_HIGH_CLASS);
+        } else if (ratePercent >= 50.0) {
+            label.getStyleClass().add(RATE_MEDIUM_CLASS);
+        } else {
+            label.getStyleClass().add(RATE_LOW_CLASS);
+        }
     }
 }

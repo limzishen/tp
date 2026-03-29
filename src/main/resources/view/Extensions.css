@@ -1,22 +1,22 @@
 
 .error {
-    -fx-text-fill: #d06651 !important; /* The error class should always override the default text-fill style */
+    -fx-text-fill: #EF4444 !important; /* The error class should always override the default text-fill style */
 }
 
 .list-cell:empty {
     /* Empty cells will not have alternating colours */
-    -fx-background: #383838;
+    -fx-background: #0F172A;
 }
 
 .tag-selector {
     -fx-border-width: 1;
-    -fx-border-color: white;
+    -fx-border-color: #E2E8F0;
     -fx-border-radius: 3;
     -fx-background-radius: 3;
 }
 
 .tooltip-text {
-    -fx-text-fill: white;
+    -fx-text-fill: #E2E8F0;
 }
 
 .attendance-statistics-panel {
@@ -27,32 +27,36 @@
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-padding: 0;
-    -fx-border-color: derive(#1d1d1d, 10%);
+    -fx-border-color: #334155;
     -fx-border-width: 1;
 }
 
 .attendance-statistics-scroll-pane > .viewport {
-    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background-color: #0F172A;
 }
 
 .attendance-statistics-scroll-pane > .corner {
-    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background-color: #0F172A;
 }
 
 .attendance-statistics-grid {
     -fx-padding: 10 5 5 10;
-    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background-color: #0F172A;
 }
 
 .attendance-statistics-cell {
     -fx-alignment: center;
     -fx-padding: 1 1;
     -fx-font-size: 12;
-    -fx-text-fill: white;
-    -fx-border-color: derive(#1d1d1d, 45%);
+    -fx-text-fill: #E2E8F0;
+    -fx-border-color: #334155;
     -fx-border-width: 1;
-    -fx-background-color: derive(#1d1d1d, 28%);
+    -fx-background-color: #1E293B;
     -fx-min-width: 40;
+}
+
+.attendance-statistics-cell:hover {
+    -fx-background-color: #273449;
 }
 
 .attendance-statistics-header {
@@ -60,13 +64,26 @@
     -fx-padding: 1 1;
     -fx-font-size: 12;
     -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-border-color: derive(#1d1d1d, 55%);
+    -fx-text-fill: #E2E8F0;
+    -fx-border-color: #334155;
     -fx-border-width: 1;
-    -fx-background-color: derive(#1d1d1d, 35%);
+    -fx-background-color: #1E293B;
     -fx-min-width: 50;
 }
 
 .attendance-statistics-first-column {
     -fx-min-width: 100;
+}
+
+/* Conditional formatting for attendance rate percentages (overrides cell default text) */
+.attendance-statistics-cell.attendance-rate-high {
+    -fx-text-fill: #22C55E;
+}
+
+.attendance-statistics-cell.attendance-rate-medium {
+    -fx-text-fill: #F59E0B;
+}
+
+.attendance-statistics-cell.attendance-rate-low {
+    -fx-text-fill: #EF4444;
 }
