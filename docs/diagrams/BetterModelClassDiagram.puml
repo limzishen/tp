@@ -1,21 +1,25 @@
 @startuml
+!pragma layout smetana
 !include style.puml
 skinparam arrowThickness 1.1
 skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
 
 AddressBook *-right-> "1" UniquePersonList
-AddressBook *-right-> "1" UniqueTagList
-UniqueTagList -[hidden]down- UniquePersonList
-UniqueTagList -[hidden]down- UniquePersonList
-
-UniqueTagList -right-> "*" Tag
-UniquePersonList -right-> Person
-
-Person -up-> "*" Tag
+UniquePersonList -right-> "*" Person
 
 Person *--> Name
 Person *--> Phone
 Person *--> Email
-Person *--> Address
+Person *--> "0..1" TeleHandle
+Person *--> StudentId
+Person *--> TutorialGroup
+Person *--> Attendance
+
+Name -[hidden]right-> Phone
+Phone -[hidden]right-> Email
+Email -[hidden]right-> TeleHandle
+TeleHandle -[hidden]right-> StudentId
+StudentId -[hidden]right-> TutorialGroup
+TutorialGroup -[hidden]right-> Attendance
 @enduml
