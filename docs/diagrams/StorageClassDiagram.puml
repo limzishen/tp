@@ -37,6 +37,12 @@ JsonUserPrefsStorage .up.|> UserPrefsStorage
 JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
 JsonSerializableAddressBook --> "*" JsonAdaptedPerson
-JsonAdaptedPerson --> "*" JsonAdaptedTag
+note right of JsonAdaptedPerson
+    Jackson view of Person fields:
+    name, studentId, email, phone,
+    teleHandle (nullable), tutorialGroup,
+    attendance as List<Boolean>
+    (index 0 = week 1; size <= Attendance.MAX_WEEKS)
+end note
 
 @enduml
