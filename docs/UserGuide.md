@@ -207,7 +207,7 @@ Examples:
 
 ### Marking attendance : `mark`
 
-CLI-Tacts supports two ways to mark attendance for a given **week** (positive integer, typically 1–13):
+CLI-Tacts supports three ways to mark attendance for a given **week** (positive integer, typically 1–13):
 
 #### Mark one student (by index)
 
@@ -216,7 +216,16 @@ Format: `mark INDEX w/WEEK`
 * `INDEX` is the position in the **currently displayed** student list (`list`, `find`, …).
 * Use this when you want to mark a specific row. Running `mark` again for the **same** student and **same** week will show an error.
 
-After a successful mark, the list filter resets to show everyone again (same as after a single-person mark in the app).
+After a successful mark, the list filter resets to show everyone again.
+
+#### Mark multiple students (by indices)
+
+Format: `mark INDEX1 INDEX2 ... w/WEEK`
+
+* Provide two or more **space-separated** indices from the **currently displayed** student list.
+* Students **already** marked for that week are **skipped** (no error). The result message states how many were updated and how many were already recorded.
+* Duplicate indices are counted only once (the duplicate is treated as already-recorded).
+* If **any** index is out of bounds, CLI-Tacts shows an error and no attendance is changed.
 
 #### Mark all students in a tutorial group
 
@@ -230,7 +239,7 @@ Format: `mark t/TUTORIAL_GROUP w/WEEK`
 #### Notes
 
 * Attendance updates and saving happen immediately after the command succeeds.
-* For the **index** form, use `find` (or `list`) first if you need a smaller list before choosing `INDEX`.
+* For the **index** forms, use `find` (or `list`) first if you need a smaller list before choosing indices.
 
 Examples (single student):
 
@@ -238,13 +247,18 @@ Examples (single student):
 * `find n/John` followed by `mark 1 w/1` — among students named “John” in the filtered list, marks the 1st for week 1.
 * `find t/T01` followed by `mark 3 w/4` — in the T01-only list, marks the 3rd student for week 4.
 
+Examples (multiple students):
+
+* `mark 1 2 3 w/5` — marks students at positions 1, 2, and 3 in the displayed list for week 5.
+* `find t/T01` followed by `mark 1 2 w/3` — in the T01-filtered list, marks the 1st and 2nd students for week 3.
+
 Example (whole group):
 
 * `mark t/T02 w/2` — marks all students in tutorial group `T02` for week 2.
 
 #### Attendance tracking
 
-Attendance is stored **per week**. Each week can be marked at most once per student; the index form enforces this with an error if you repeat the same week, while the group form skips students who are already marked for that week.
+Attendance is stored **per week**. Each week can be marked at most once per student. The single-index form shows an error if you repeat the same week for the same student. The multiple-index and group forms skip already-marked students and report counts instead.
 
 ### Unmarking attendance : `unmark`
 
@@ -375,6 +389,6 @@ Action | Format, Examples
 **Export** | `export`
 **Find** | `find [n/NAME_KEYWORD] [t/TUTORIAL_GROUP] [e/EMAIL] [th/TELE_HANDLE]`<br> e.g., `find n/James t/T01 e/james@u.nus.edu`
 **List** | `list`
-**Mark** | `mark INDEX w/WEEK`<br> e.g., `mark 1 w/2`
+**Mark** | `mark INDEX w/WEEK`<br> `mark INDEX1 INDEX2 ... w/WEEK`<br> `mark t/TUTORIAL_GROUP w/WEEK`<br> e.g., `mark 1 w/2` or `mark 1 2 3 w/5` or `mark t/T02 w/2`
 **Unmark** | `unmark INDEX w/WEEK`<br> e.g., `unmark 1 w/2` or `unmark t/T01 w/2`
 **Help** | `help`

@@ -9,8 +9,11 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.MarkCommand;
 import seedu.address.model.person.TutorialGroup;
 
@@ -37,6 +40,30 @@ public class MarkCommandParserTest {
                 new MarkCommand(new TutorialGroup("T01"), 2));
         assertParseSuccess(parser, PREFIX_TUTORIAL_GROUP + "T02 " + PREFIX_WEEK + "1",
                 new MarkCommand(new TutorialGroup("T02"), 1));
+    }
+
+    @Test
+    public void parse_validMultipleIndices_returnsMarkCommand() {
+        List<Index> expectedIndices = List.of(
+                Index.fromOneBased(1), Index.fromOneBased(2), Index.fromOneBased(3));
+        assertParseSuccess(parser, "1 2 3 " + PREFIX_WEEK + "5",
+                new MarkCommand(expectedIndices, 5));
+
+        List<Index> twoIndices = List.of(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
+        assertParseSuccess(parser, "1 2 " + PREFIX_WEEK + "1",
+                new MarkCommand(twoIndices, 1));
+    }
+
+    @Test
+    public void parse_multipleIndicesWithInvalidIndex_throwsParseException() {
+        assertParseFailure(parser, "1 -2 3 " + PREFIX_WEEK + "1",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE));
+
+        assertParseFailure(parser, "1 0 " + PREFIX_WEEK + "1",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE));
+
+        assertParseFailure(parser, "1 abc " + PREFIX_WEEK + "1",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE));
     }
 
     @Test

@@ -9,6 +9,8 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -132,6 +134,54 @@ public class MarkCommandTest {
     }
 
     @Test
+    public void execute_validMultipleIndices_success() {
+        List<Person> initialList = model.getFilteredPersonList();
+        Person firstPerson = initialList.get(INDEX_FIRST_PERSON.getZeroBased());
+        Person secondPerson = initialList.get(INDEX_SECOND_PERSON.getZeroBased());
+        int weekToMark = 6;
+
+        List<Index> indices = List.of(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
+        MarkCommand markCommand = new MarkCommand(indices, weekToMark);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModel.setPerson(firstPerson, createPersonWithMarkedWeek(firstPerson, weekToMark));
+        expectedModel.setPerson(secondPerson, createPersonWithMarkedWeek(secondPerson, weekToMark));
+
+        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_MULTIPLE_SUCCESS,
+                weekToMark, 2, 2, 0);
+
+        assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_multipleIndices_skipsAlreadyMarked() {
+        int weekToMark = 7;
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        model.setPerson(firstPerson, createPersonWithMarkedWeek(firstPerson, weekToMark));
+
+        List<Index> indices = List.of(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
+        MarkCommand markCommand = new MarkCommand(indices, weekToMark);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        Person secondPersonExpected = expectedModel.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
+        expectedModel.setPerson(secondPersonExpected, createPersonWithMarkedWeek(secondPersonExpected, weekToMark));
+
+        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_MULTIPLE_SUCCESS,
+                weekToMark, 2, 1, 1);
+
+        assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_multipleIndices_invalidIndex_throwsCommandException() {
+        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        List<Index> indices = List.of(INDEX_FIRST_PERSON, outOfBoundIndex);
+        MarkCommand markCommand = new MarkCommand(indices, 1);
+
+        assertCommandFailure(markCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+    }
+
+    @Test
     public void execute_markTutorialGroup_success() {
         TutorialGroup t01 = new TutorialGroup("T01");
         int week = 5;
@@ -236,6 +286,13 @@ public class MarkCommandTest {
         assertTrue(markGroup.equals(markGroupCopy));
         assertFalse(markFirstCommand.equals(markGroup));
         assertFalse(markGroup.equals(new MarkCommand(new TutorialGroup("T02"), 1)));
+
+        // multiple indices
+        MarkCommand markMultiple = new MarkCommand(List.of(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON), 1);
+        MarkCommand markMultipleCopy = new MarkCommand(List.of(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON), 1);
+        assertTrue(markMultiple.equals(markMultipleCopy));
+        assertFalse(markFirstCommand.equals(markMultiple));
+        assertFalse(markMultiple.equals(new MarkCommand(List.of(INDEX_FIRST_PERSON), 1)));
     }
 
     /**

@@ -5,6 +5,9 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TUTORIAL_GROUP;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_WEEK;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.MarkCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -53,11 +56,26 @@ public class MarkCommandParser implements Parser<MarkCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE));
         }
 
-        try {
-            Index index = ParserUtil.parseIndex(preamble);
-            return new MarkCommand(index, week);
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE), pe);
+        String[] parts = preamble.split("\\s+");
+        if (parts.length == 1) {
+            try {
+                Index index = ParserUtil.parseIndex(preamble);
+                return new MarkCommand(index, week);
+            } catch (ParseException pe) {
+                throw new ParseException(
+                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE), pe);
+            }
+        } else {
+            List<Index> indexList = new ArrayList<>();
+            for (String part : parts) {
+                try {
+                    indexList.add(ParserUtil.parseIndex(part));
+                } catch (ParseException pe) {
+                    throw new ParseException(
+                            String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE), pe);
+                }
+            }
+            return new MarkCommand(indexList, week);
         }
     }
 

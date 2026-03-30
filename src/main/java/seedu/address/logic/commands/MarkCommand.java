@@ -5,8 +5,10 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TUTORIAL_GROUP;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_WEEK;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
@@ -26,12 +28,15 @@ public class MarkCommand extends Command {
     public static final String COMMAND_WORD = "mark";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Marks attendance for one person by list index, or for everyone in a tutorial group.\n"
+            + ": Marks attendance for one or more persons by list index, or for everyone in a tutorial group.\n"
             + "Parameters (single): INDEX (positive integer) "
+            + PREFIX_WEEK + "WEEK (positive integer)\n"
+            + "Parameters (multiple): INDEX1 INDEX2 ... (positive integers) "
             + PREFIX_WEEK + "WEEK (positive integer)\n"
             + "Parameters (group): " + PREFIX_TUTORIAL_GROUP + "TUTORIAL_GROUP "
             + PREFIX_WEEK + "WEEK (positive integer)\n"
             + "Example (single): " + COMMAND_WORD + " 1 " + PREFIX_WEEK + "2\n"
+            + "Example (multiple): " + COMMAND_WORD + " 1 2 3 " + PREFIX_WEEK + "2\n"
             + "Example (group): " + COMMAND_WORD + " " + PREFIX_TUTORIAL_GROUP + "T02 " + PREFIX_WEEK + "2";
 
     public static final String MESSAGE_MARK_PERSON_SUCCESS = "Marked Person: %1$s";
@@ -39,10 +44,13 @@ public class MarkCommand extends Command {
                                 + " as attended for week %2$s.";
     public static final String MESSAGE_MARK_GROUP_SUCCESS =
             "Marked week %1$d for tutorial group %2$s: %3$d student(s) updated, %4$d already recorded for this week.";
+    public static final String MESSAGE_MARK_MULTIPLE_SUCCESS =
+            "Marked week %1$d for %2$d selected student(s): %3$d updated, %4$d already recorded for this week.";
     public static final String MESSAGE_NO_STUDENTS_IN_GROUP = "No students found in tutorial group %1$s.";
     public static final String MESSAGE_INVALID_WEEK = "Week must be a positive integer between 1 to 13.";
 
     private final Optional<Index> index;
+    private final Optional<List<Index>> indices;
     private final Optional<TutorialGroup> tutorialGroup;
     private final int week;
 
@@ -53,6 +61,19 @@ public class MarkCommand extends Command {
     public MarkCommand(Index index, int week) {
         requireNonNull(index);
         this.index = Optional.of(index);
+        this.indices = Optional.empty();
+        this.tutorialGroup = Optional.empty();
+        this.week = week;
+    }
+
+    /**
+     * @param indices list of indices of persons in the filtered person list to mark
+     * @param week of the attendance to mark
+     */
+    public MarkCommand(List<Index> indices, int week) {
+        requireNonNull(indices);
+        this.index = Optional.empty();
+        this.indices = Optional.of(indices);
         this.tutorialGroup = Optional.empty();
         this.week = week;
     }
@@ -64,6 +85,7 @@ public class MarkCommand extends Command {
     public MarkCommand(TutorialGroup tutorialGroup, int week) {
         requireNonNull(tutorialGroup);
         this.index = Optional.empty();
+        this.indices = Optional.empty();
         this.tutorialGroup = Optional.of(tutorialGroup);
         this.week = week;
     }
@@ -74,9 +96,9 @@ public class MarkCommand extends Command {
         if (tutorialGroup.isPresent()) {
             return executeMarkTutorialGroup(model, tutorialGroup.get(), week);
         }
-        // what happens if both index and tutorial group are present
-        // what happens if tutorial group is not present
-        // throw error in parser?
+        if (indices.isPresent()) {
+            return executeMarkMultipleIndices(model, indices.get(), week);
+        }
         return executeMarkIndex(model, index.get(), week);
     }
 
@@ -112,6 +134,57 @@ public class MarkCommand extends Command {
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
         return new CommandResult(String.format(MESSAGE_MARK_PERSON_SUCCESS, Messages.format(markedPerson)));
+    }
+
+    private CommandResult executeMarkMultipleIndices(Model model, List<Index> indices, int week)
+            throws CommandException {
+        List<Person> lastShownList = model.getFilteredPersonList();
+
+        for (Index idx : indices) {
+            if (idx.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            }
+        }
+
+        if (week < 1 || week > Attendance.MAX_WEEKS) {
+            throw new CommandException(MESSAGE_INVALID_WEEK);
+        }
+
+        int updated = 0;
+        int skipped = 0;
+        Set<Integer> processedIndices = new HashSet<>();
+
+        for (Index idx : indices) {
+            int zeroBased = idx.getZeroBased();
+            if (processedIndices.contains(zeroBased)) {
+                skipped++;
+                continue;
+            }
+            processedIndices.add(zeroBased);
+
+            Person personToMark = model.getFilteredPersonList().get(zeroBased);
+            if (personToMark.getAttendance().isMarked(week)) {
+                skipped++;
+                continue;
+            }
+
+            Attendance updatedAttendance = personToMark.getAttendance().createCopyWithMarkedWeek(week);
+            Person markedPerson = new Person(
+                    personToMark.getName(),
+                    personToMark.getPhone(),
+                    personToMark.getEmail(),
+                    personToMark.getTeleHandle().orElse(null),
+                    personToMark.getStudentId(),
+                    personToMark.getTutorialGroup(),
+                    updatedAttendance
+            );
+            model.setPerson(personToMark, markedPerson);
+            updated++;
+        }
+
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        return new CommandResult(
+                String.format(MESSAGE_MARK_MULTIPLE_SUCCESS, week, updated + skipped, updated, skipped));
     }
 
     private CommandResult executeMarkTutorialGroup(Model model, TutorialGroup group, int week)
@@ -162,6 +235,7 @@ public class MarkCommand extends Command {
 
         MarkCommand otherMarkCommand = (MarkCommand) other;
         return index.equals(otherMarkCommand.index)
+                && indices.equals(otherMarkCommand.indices)
                 && tutorialGroup.equals(otherMarkCommand.tutorialGroup)
                 && week == otherMarkCommand.week;
     }
@@ -170,6 +244,7 @@ public class MarkCommand extends Command {
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)
+                .add("indices", indices)
                 .add("tutorialGroup", tutorialGroup)
                 .add("week", week)
                 .toString();

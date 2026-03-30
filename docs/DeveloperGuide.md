@@ -195,6 +195,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *` | CS2040S Teaching Assistant | list all students | get an overview of who is under my care |
 | `* * *` | CS2040S Teaching Assistant | filter the student list by tutorial group | focus only on the current class I’m teaching |
 | `* * *` | CS2040S Teaching Assistant | mark a student as present for a specific week | track attendance quickly during live tutorials |
+| `* * *` | CS2040S Teaching Assistant | mark multiple specific students in one command | record attendance for selected students without repeating single-student marks |
 | `* * *` | CS2040S Teaching Assistant | mark every student in a tutorial group for a week in one command | record whole-class attendance without repeating single-student marks |
 | `* * *` | CS2040S Teaching Assistant | unmark a student's attendance for a specific week | correct attendance mistakes quickly during live tutorials |
 | `* *` | CS2040S Teaching Assistant | view students with low attendance | identify students who may need follow-up |
@@ -257,8 +258,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 1. User requests to view students (e.g. `list` or `find`).
 2. CLI-Tacts shows the filtered student list with indexes.
-3. User requests to mark a specific student using `mark INDEX w/WEEK`.
-4. CLI-Tacts updates the attendance record for that student.
+3. User requests to mark one or more students using `mark INDEX w/WEEK` or `mark INDEX1 INDEX2 ... w/WEEK`.
+4. CLI-Tacts updates the attendance record for the specified student(s).
 5. CLI-Tacts confirms the change and refreshes the list display.
 
       Use case ends.
@@ -279,14 +280,26 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 2.
 
-* 3c. User marks an entire tutorial group with `mark t/TUTORIAL_GROUP w/WEEK`.
-    * 3c1. CLI-Tacts updates every student in storage with that tutorial group; already-marked students for that week are skipped.
-    * 3c2. CLI-Tacts reports counts of updated vs already-recorded students.
+* 3c. User marks multiple students by indices with `mark INDEX1 INDEX2 ... w/WEEK`.
+    * 3c1. CLI-Tacts validates all provided indices are within bounds.
+    * 3c2. CLI-Tacts updates each student in the list; already-marked students for that week are skipped.
+    * 3c3. CLI-Tacts reports counts of updated vs already-recorded students.
 
       Use case ends.
 
-* 3d. No student has the given tutorial group (group mark).
-    * 3d1. CLI-Tacts shows an error message.
+* 3d. Any index provided in the multiple-index command is invalid.
+    * 3d1. CLI-Tacts shows an error message and makes no changes.
+
+      Use case resumes at step 2.
+
+* 3e. User marks an entire tutorial group with `mark t/TUTORIAL_GROUP w/WEEK`.
+    * 3e1. CLI-Tacts updates every student in storage with that tutorial group; already-marked students for that week are skipped.
+    * 3e2. CLI-Tacts reports counts of updated vs already-recorded students.
+
+      Use case ends.
+
+* 3f. No student has the given tutorial group (group mark).
+    * 3f1. CLI-Tacts shows an error message.
 
       Use case ends.
 
