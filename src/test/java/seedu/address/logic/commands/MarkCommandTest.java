@@ -173,7 +173,7 @@ public class MarkCommandTest {
     }
 
     @Test
-    public void execute_multipleIndices_invalidIndex_throwsCommandException() {
+    public void execute_invalidMultipleIndex_throwsCommandException() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         List<Index> indices = List.of(INDEX_FIRST_PERSON, outOfBoundIndex);
         MarkCommand markCommand = new MarkCommand(indices, 1);
