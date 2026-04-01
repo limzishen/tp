@@ -3,6 +3,7 @@ package seedu.address.model.person;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.Assert.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -53,22 +54,19 @@ public class AttendanceTest {
     @Test
     public void markWeek_invalidWeekZero_doesNotMark() {
         Attendance attendance = new Attendance();
-        attendance.markWeek(0);
-        assertFalse(attendance.isMarked(0));
+        assertThrows(AssertionError.class, () -> attendance.markWeek(0));
     }
 
     @Test
     public void markWeek_invalidWeekNegative_doesNotMark() {
         Attendance attendance = new Attendance();
-        attendance.markWeek(-1);
-        assertFalse(attendance.isMarked(-1));
+        assertThrows(AssertionError.class, () -> attendance.markWeek(-1));
     }
 
     @Test
     public void markWeek_invalidWeekAboveMax_doesNotMark() {
         Attendance attendance = new Attendance();
-        attendance.markWeek(14);
-        assertFalse(attendance.isMarked(14));
+        assertThrows(AssertionError.class, () -> attendance.markWeek(14));
     }
 
     @Test
@@ -88,19 +86,19 @@ public class AttendanceTest {
     @Test
     public void isMarked_invalidWeekZero_returnsFalse() {
         Attendance attendance = new Attendance();
-        assertFalse(attendance.isMarked(0));
+        assertThrows(AssertionError.class, () -> attendance.isMarked(0));
     }
 
     @Test
     public void isMarked_invalidWeekNegative_returnsFalse() {
         Attendance attendance = new Attendance();
-        assertFalse(attendance.isMarked(-5));
+        assertThrows(AssertionError.class, () -> attendance.isMarked(-5));
     }
 
     @Test
     public void isMarked_invalidWeekAboveMax_returnsFalse() {
         Attendance attendance = new Attendance();
-        assertFalse(attendance.isMarked(14));
+        assertThrows(AssertionError.class, () -> attendance.isMarked(14));
     }
 
     @Test
@@ -171,9 +169,9 @@ public class AttendanceTest {
     public void unmarkWeek_invalidWeek_doesNotChange() {
         Attendance attendance = new Attendance();
         attendance.markWeek(1);
-        attendance.unmarkWeek(0);
-        attendance.unmarkWeek(-1);
-        attendance.unmarkWeek(Attendance.MAX_WEEKS + 1);
+        assertThrows(AssertionError.class, () -> attendance.unmarkWeek(0));
+        assertThrows(AssertionError.class, () -> attendance.unmarkWeek(-1));
+        assertThrows(AssertionError.class, () -> attendance.unmarkWeek(Attendance.MAX_WEEKS + 1));
         assertTrue(attendance.isMarked(1));
     }
 
