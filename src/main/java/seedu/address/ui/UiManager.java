@@ -1,7 +1,7 @@
 package seedu.address.ui;
 
-import java.util.logging.Logger;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
