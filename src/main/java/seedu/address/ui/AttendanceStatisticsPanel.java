@@ -1,9 +1,10 @@
 package seedu.address.ui;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -28,13 +29,27 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
     private static final String RATE_HIGH_CLASS = "attendance-rate-high";
     private static final String RATE_MEDIUM_CLASS = "attendance-rate-medium";
     private static final String RATE_LOW_CLASS = "attendance-rate-low";
+    private static final String TUTORIAL_GROUP_HEADER_TEXT = "Tutorial Group";
+    private static final String RATE_HEADER_TEXT = "Rate";
+    private static final String OVERALL_ROW_TEXT = "Overall";
+    private static final String WEEK_HEADER_FORMAT = "W%d";
+    private static final String WEEK_RATE_FORMAT = "%.0f%%";
+    private static final String OVERALL_RATE_FORMAT = "%.1f%%";
     private static final double FIRST_COLUMN_WIDTH = 100;
     private static final double WEEK_COLUMN_WIDTH = 50;
     private static final double RATE_COLUMN_WIDTH = 60;
+    private static final double GRID_GAP = 5;
+    private static final double HIGH_ATTENDANCE_THRESHOLD = 80.0;
+    private static final double MEDIUM_ATTENDANCE_THRESHOLD = 50.0;
+    private static final int HEADER_ROW_INDEX = 0;
+    private static final int FIRST_DATA_ROW_INDEX = 1;
+    private static final int FIRST_COLUMN_INDEX = 0;
+    private static final int OVERALL_RATE_COLUMN_INDEX = Attendance.MAX_WEEKS + 1;
 
     @FXML
     private ScrollPane scrollPane;
 
+    private final ObservableList<Person> personList;
     private final GridPane statisticsGrid;
 
     /**
@@ -42,125 +57,138 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
      */
     public AttendanceStatisticsPanel(ObservableList<Person> personList) {
         super(FXML);
-        statisticsGrid = new GridPane();
-        statisticsGrid.getStyleClass().add(GRID_STYLE_CLASS);
-        statisticsGrid.setHgap(5);
-        statisticsGrid.setVgap(5);
+        this.personList = personList;
+        statisticsGrid = createStatisticsGrid();
         scrollPane.setContent(statisticsGrid);
-        updateStatistics(personList);
-        personList.addListener((ListChangeListener<Person>) change -> updateStatistics(personList));
+        updateStatistics();
+        personList.addListener((ListChangeListener<Person>) ignored -> updateStatistics());
     }
 
     /**
      * Updates the attendance statistics displayed in the panel.
      */
-    private void updateStatistics(ObservableList<Person> personList) {
+    private void updateStatistics() {
         statisticsGrid.getChildren().clear();
 
-        // Group persons by tutorial group
-        Map<TutorialGroup, java.util.List<Person>> groupMap = new HashMap<>();
-        for (Person person : personList) {
-            groupMap.computeIfAbsent(person.getTutorialGroup(), k -> new java.util.ArrayList<>()).add(person);
+        Map<TutorialGroup, List<Person>> studentsByGroup = groupPersonsByTutorialGroup(personList);
+        addHeaderRow();
+        int nextRowIndex = addTutorialGroupRows(studentsByGroup);
+        addStatisticsRow(OVERALL_ROW_TEXT, personList, nextRowIndex);
+    }
+
+    private GridPane createStatisticsGrid() {
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add(GRID_STYLE_CLASS);
+        grid.setHgap(GRID_GAP);
+        grid.setVgap(GRID_GAP);
+        return grid;
+    }
+
+    private Map<TutorialGroup, List<Person>> groupPersonsByTutorialGroup(List<Person> persons) {
+        Map<TutorialGroup, List<Person>> studentsByGroup =
+                new TreeMap<>(Comparator.comparing(tutorialGroup -> tutorialGroup.value));
+
+        for (Person person : persons) {
+            studentsByGroup.computeIfAbsent(person.getTutorialGroup(), unused -> new ArrayList<>()).add(person);
         }
 
-        // Sort tutorial groups
-        SortedSet<TutorialGroup> sortedGroups = new TreeSet<>((g1, g2) -> g1.value.compareTo(g2.value));
-        sortedGroups.addAll(groupMap.keySet());
+        return studentsByGroup;
+    }
 
-        int rowIndex = 0;
-
-        // Create header row
-        Label headerLabel = new Label("Tutorial Group");
-        headerLabel.getStyleClass().addAll(HEADER_STYLE_CLASS, FIRST_COLUMN_STYLE_CLASS);
-        headerLabel.setPrefWidth(FIRST_COLUMN_WIDTH);
-        statisticsGrid.add(headerLabel, 0, rowIndex);
+    private void addHeaderRow() {
+        statisticsGrid.add(createFirstColumnHeaderCell(TUTORIAL_GROUP_HEADER_TEXT),
+                FIRST_COLUMN_INDEX, HEADER_ROW_INDEX);
 
         for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
-            Label weekLabel = new Label("W" + week);
-            weekLabel.getStyleClass().add(HEADER_STYLE_CLASS);
-            weekLabel.setPrefWidth(WEEK_COLUMN_WIDTH);
-            statisticsGrid.add(weekLabel, week, rowIndex);
+            statisticsGrid.add(createHeaderCell(String.format(WEEK_HEADER_FORMAT, week), WEEK_COLUMN_WIDTH),
+                    week, HEADER_ROW_INDEX);
         }
 
-        Label rateLabel = new Label("Rate");
-        rateLabel.getStyleClass().add(HEADER_STYLE_CLASS);
-        rateLabel.setPrefWidth(RATE_COLUMN_WIDTH);
-        statisticsGrid.add(rateLabel, Attendance.MAX_WEEKS + 1, rowIndex);
+        statisticsGrid.add(createHeaderCell(RATE_HEADER_TEXT, RATE_COLUMN_WIDTH),
+                OVERALL_RATE_COLUMN_INDEX, HEADER_ROW_INDEX);
+    }
 
-        rowIndex++;
-
-        // Create data rows for each tutorial group
-        for (TutorialGroup group : sortedGroups) {
-            java.util.List<Person> studentsInGroup = groupMap.get(group);
-            Label groupLabel = new Label(group.value);
-            groupLabel.getStyleClass().addAll(CELL_STYLE_CLASS, FIRST_COLUMN_STYLE_CLASS);
-            groupLabel.setPrefWidth(FIRST_COLUMN_WIDTH);
-            statisticsGrid.add(groupLabel, 0, rowIndex);
-
-            int totalAttendance = 0;
-            int possibleAttendance = studentsInGroup.size() * Attendance.MAX_WEEKS;
-
-            for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
-                int attendanceCount = 0;
-                for (Person person : studentsInGroup) {
-                    if (person.getAttendance().isMarked(week)) {
-                        attendanceCount++;
-                    }
-                }
-                totalAttendance += attendanceCount;
-
-                double attendanceRate = studentsInGroup.isEmpty()
-                        ? 0
-                        : (double) attendanceCount / studentsInGroup.size() * 100;
-                Label rateCell = new Label(String.format("%.0f%%", attendanceRate));
-                rateCell.getStyleClass().add(CELL_STYLE_CLASS);
-                applyAttendanceRateTierStyle(rateCell, attendanceRate);
-                rateCell.setPrefWidth(WEEK_COLUMN_WIDTH);
-                statisticsGrid.add(rateCell, week, rowIndex);
-            }
-
-            double overallRate = possibleAttendance == 0 ? 0 : (double) totalAttendance / possibleAttendance * 100;
-            Label overallRateLabel = new Label(String.format("%.1f%%", overallRate));
-            overallRateLabel.getStyleClass().add(CELL_STYLE_CLASS);
-            applyAttendanceRateTierStyle(overallRateLabel, overallRate);
-            overallRateLabel.setPrefWidth(RATE_COLUMN_WIDTH);
-            statisticsGrid.add(overallRateLabel, Attendance.MAX_WEEKS + 1, rowIndex);
-
+    private int addTutorialGroupRows(Map<TutorialGroup, List<Person>> studentsByGroup) {
+        int rowIndex = FIRST_DATA_ROW_INDEX;
+        for (Map.Entry<TutorialGroup, List<Person>> entry : studentsByGroup.entrySet()) {
+            addStatisticsRow(entry.getKey().value, entry.getValue(), rowIndex);
             rowIndex++;
         }
+        return rowIndex;
+    }
 
-        // Add overall statistics row
-        Label totalLabel = new Label("Overall");
-        totalLabel.getStyleClass().addAll(CELL_STYLE_CLASS, FIRST_COLUMN_STYLE_CLASS);
-        totalLabel.setPrefWidth(FIRST_COLUMN_WIDTH);
-        statisticsGrid.add(totalLabel, 0, rowIndex);
+    private void addStatisticsRow(String rowLabel, List<Person> students, int rowIndex) {
+        statisticsGrid.add(createFirstColumnDataCell(rowLabel), FIRST_COLUMN_INDEX, rowIndex);
 
-        int totalAllAttendance = 0;
-        int totalAllPossible = personList.size() * Attendance.MAX_WEEKS;
+        int totalAttendance = addWeeklyAttendanceCells(students, rowIndex);
+        addOverallAttendanceCell(students.size(), totalAttendance, rowIndex);
+    }
+
+    private int addWeeklyAttendanceCells(List<Person> students, int rowIndex) {
+        int totalAttendance = 0;
 
         for (int week = 1; week <= Attendance.MAX_WEEKS; week++) {
-            int attendanceCount = 0;
-            for (Person person : personList) {
-                if (person.getAttendance().isMarked(week)) {
-                    attendanceCount++;
-                }
-            }
-            totalAllAttendance += attendanceCount;
+            int attendanceCount = countMarkedStudentsForWeek(students, week);
+            totalAttendance += attendanceCount;
 
-            double attendanceRate = personList.isEmpty() ? 0 : (double) attendanceCount / personList.size() * 100;
-            Label rateCell = new Label(String.format("%.0f%%", attendanceRate));
-            rateCell.getStyleClass().add(CELL_STYLE_CLASS);
-            applyAttendanceRateTierStyle(rateCell, attendanceRate);
-            rateCell.setPrefWidth(WEEK_COLUMN_WIDTH);
-            statisticsGrid.add(rateCell, week, rowIndex);
+            double attendanceRate = calculatePercentage(attendanceCount, students.size());
+            statisticsGrid.add(createRateCell(attendanceRate, WEEK_COLUMN_WIDTH, WEEK_RATE_FORMAT), week, rowIndex);
         }
 
-        double overallRate = totalAllPossible == 0 ? 0 : (double) totalAllAttendance / totalAllPossible * 100;
-        Label overallRateLabel = new Label(String.format("%.1f%%", overallRate));
-        overallRateLabel.getStyleClass().add(CELL_STYLE_CLASS);
-        applyAttendanceRateTierStyle(overallRateLabel, overallRate);
-        overallRateLabel.setPrefWidth(RATE_COLUMN_WIDTH);
-        statisticsGrid.add(overallRateLabel, Attendance.MAX_WEEKS + 1, rowIndex);
+        return totalAttendance;
+    }
+
+    private void addOverallAttendanceCell(int studentCount, int totalAttendance, int rowIndex) {
+        int totalPossibleAttendance = studentCount * Attendance.MAX_WEEKS;
+        double overallRate = calculatePercentage(totalAttendance, totalPossibleAttendance);
+
+        statisticsGrid.add(createRateCell(overallRate, RATE_COLUMN_WIDTH, OVERALL_RATE_FORMAT),
+                OVERALL_RATE_COLUMN_INDEX, rowIndex);
+    }
+
+    private int countMarkedStudentsForWeek(List<Person> students, int week) {
+        int attendanceCount = 0;
+
+        for (Person person : students) {
+            if (person.getAttendance().isMarked(week)) {
+                attendanceCount++;
+            }
+        }
+
+        return attendanceCount;
+    }
+
+    private double calculatePercentage(int numerator, int denominator) {
+        return denominator == 0 ? 0 : (double) numerator / denominator * 100;
+    }
+
+    private Label createFirstColumnHeaderCell(String text) {
+        return createStyledLabel(text, FIRST_COLUMN_WIDTH, HEADER_STYLE_CLASS, FIRST_COLUMN_STYLE_CLASS);
+    }
+
+    private Label createHeaderCell(String text, double width) {
+        return createStyledLabel(text, width, HEADER_STYLE_CLASS);
+    }
+
+    private Label createFirstColumnDataCell(String text) {
+        return createStyledLabel(text, FIRST_COLUMN_WIDTH, CELL_STYLE_CLASS, FIRST_COLUMN_STYLE_CLASS);
+    }
+
+    private Label createDataCell(String text, double width) {
+        return createStyledLabel(text, width, CELL_STYLE_CLASS);
+    }
+
+    private Label createRateCell(double attendanceRate, double width, String format) {
+        Label rateCell = createDataCell(String.format(format, attendanceRate), width);
+        applyAttendanceRateTierStyle(rateCell, attendanceRate);
+        return rateCell;
+    }
+
+    private Label createStyledLabel(String text, double width, String... styleClasses) {
+        Label label = new Label(text);
+        label.getStyleClass().addAll(styleClasses);
+        label.setPrefWidth(width);
+        return label;
     }
 
     /**
@@ -168,9 +196,9 @@ public class AttendanceStatisticsPanel extends UiPart<VBox> {
      */
     private void applyAttendanceRateTierStyle(Label label, double ratePercent) {
         label.getStyleClass().removeAll(RATE_HIGH_CLASS, RATE_MEDIUM_CLASS, RATE_LOW_CLASS);
-        if (ratePercent >= 80.0) {
+        if (ratePercent >= HIGH_ATTENDANCE_THRESHOLD) {
             label.getStyleClass().add(RATE_HIGH_CLASS);
-        } else if (ratePercent >= 50.0) {
+        } else if (ratePercent >= MEDIUM_ATTENDANCE_THRESHOLD) {
             label.getStyleClass().add(RATE_MEDIUM_CLASS);
         } else {
             label.getStyleClass().add(RATE_LOW_CLASS);
