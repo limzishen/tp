@@ -41,6 +41,7 @@ public class EmailTest {
         assertFalse(Email.isValidEmail("peter@jack@u.nus.edu")); // '@' symbol in local part
         assertFalse(Email.isValidEmail("peterjack@example.com")); // wrong domain
         assertFalse(Email.isValidEmail("peterjack@u.nus.edu.sg")); // wrong domain (.sg suffix)
+        assertFalse(Email.isValidEmail("a".repeat(51) + "@u.nus.edu")); // local part too long
 
         // valid email
         assertTrue(Email.isValidEmail("PeterJack_1190@u.nus.edu")); // underscore in local part
@@ -51,7 +52,7 @@ public class EmailTest {
         assertTrue(Email.isValidEmail("test@u.nus.edu")); // alphabets only
         assertTrue(Email.isValidEmail("123@u.nus.edu")); // numeric local part
         assertTrue(Email.isValidEmail("a1+be.d@u.nus.edu")); // mixture of alphanumeric and special characters
-        assertTrue(Email.isValidEmail("if.you.dream.it_you.can.do.it@u.nus.edu")); // long local part
+        assertTrue(Email.isValidEmail("a".repeat(50) + "@u.nus.edu")); // max local part length
     }
 
     @Test

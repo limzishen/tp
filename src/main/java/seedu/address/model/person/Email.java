@@ -12,6 +12,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Email {
 
     private static final String SPECIAL_CHARACTERS = "+_.-";
+    public static final int MAX_LOCAL_PART_LENGTH = 50;
     public static final String MESSAGE_CONSTRAINTS = "Emails should be of the format local-part@u.nus.edu "
         + "and adhere to the following constraints:\n"
         + "1. The local-part should only contain alphanumeric characters and these special characters, excluding "
@@ -19,7 +20,8 @@ public class Email {
         + "2. Each special character must be surrounded by alphanumeric characters "
         + "(i.e. the local-part cannot start or end with a special character, and cannot contain consecutive special "
         + "characters).\n"
-        + "3. The domain must be exactly u.nus.edu.";
+        + "3. The local-part must be at most " + MAX_LOCAL_PART_LENGTH + " characters long.\n"
+        + "4. The domain must be exactly u.nus.edu.";
     // alphanumeric and special characters
     private static final String ALPHANUMERIC_NO_UNDERSCORE = "[^\\W_]+";
     private static final String LOCAL_PART_REGEX =
@@ -50,7 +52,11 @@ public class Email {
         if (test == null) {
             throw new NullPointerException();
         }
-        return test.matches(VALIDATION_REGEX);
+        if (!test.matches(VALIDATION_REGEX)) {
+            return false;
+        }
+        int atIndex = test.indexOf('@');
+        return atIndex <= MAX_LOCAL_PART_LENGTH;
     }
 
     @Override

@@ -30,6 +30,7 @@ public class NameTest {
         assertFalse(Name.isValidName("^")); // only non-alphanumeric characters
         assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters
         assertFalse(Name.isValidName("-peter")); // starts with a hyphen
+        assertFalse(Name.isValidName("a".repeat(55))); // too long
 
         // valid name
         assertTrue(Name.isValidName("peter jack")); // alphabets only
@@ -40,6 +41,7 @@ public class NameTest {
         assertTrue(Name.isValidName("Mary-Jane")); // name with hyphen
         assertTrue(Name.isValidName("O'Brien")); // name with apostrophe
         assertTrue(Name.isValidName("Lim, Junior")); // name with comma
+        assertTrue(Name.isValidName("a".repeat(54))); // max length
     }
 
     @Test
