@@ -131,6 +131,24 @@ public class EditCommandTest {
     }
 
     @Test
+    public void execute_duplicateEmailUnfilteredList_failure() {
+        // ALICE has alice@u.nus.edu; edit BENSON to use same email.
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail("alice@u.nus.edu").build();
+        EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
+
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_EMAIL);
+    }
+
+    @Test
+    public void execute_duplicatePhoneUnfilteredList_failure() {
+        // ALICE has 94351253; edit BENSON to use same phone.
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withPhone("94351253").build();
+        EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
+
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PHONE);
+    }
+
+    @Test
     public void execute_invalidPersonIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build();
