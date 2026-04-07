@@ -55,6 +55,7 @@ public class EditCommand extends Command {
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_STUDENT_ID = "This ID already exists in the address book.";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -83,6 +84,14 @@ public class EditCommand extends Command {
         Person personToEdit = lastShownList.get(index.getZeroBased());
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
+        boolean studentIdIsEditedToAnotherExistingPerson =
+                !personToEdit.getStudentId().equals(editedPerson.getStudentId()) && model.hasPerson(editedPerson);
+        if (studentIdIsEditedToAnotherExistingPerson) {
+            throw new CommandException(MESSAGE_DUPLICATE_STUDENT_ID);
+        }
+
+        // Fallback duplicate guard for non-student-ID identity conflicts.
+        // Student ID collisions are handled by the dedicated check above.
         if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
