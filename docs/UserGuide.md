@@ -152,7 +152,13 @@ If an invalid tutorial group is supplied:
 If a student with the same student ID already exists:
 
 > This ID already exists in the address book
+If a student with the same email already exists:
 
+> This email is already used by another person.
+
+If a student with the same phone number already exists:
+
+> This phone number is already used by another person.
 ### Listing all persons : `list`
 
 Shows a list of all students currently in CLI-Tacts.
@@ -192,7 +198,15 @@ If no field is provided, CLI-Tacts shows an error similar to:
 
 If the edited values result in a duplicate student ID, CLI-Tacts shows an error similar to:
 
-> This ID already exists in the address book.
+> This student ID is already used by another person.
+
+If the edited values result in a duplicate email, CLI-Tacts shows an error similar to:
+
+> This email is already used by another person.
+
+If the edited values result in a duplicate phone number, CLI-Tacts shows an error similar to:
+
+> This phone number is already used by another person.
 
 If any field value is invalid, CLI-Tacts shows the corresponding constraint message (same as in `add`).
 
