@@ -93,12 +93,13 @@ Format:
 
 Where:
 
-- `NAME` should only contain alphanumeric characters, spaces, hyphens (`-`), commas (`,`), and apostrophes (`'`). The first character must be alphanumeric.
+- `NAME` should only contain alphanumeric characters, spaces, hyphens (`-`), commas (`,`), and apostrophes (`'`). The first character must be alphanumeric. Max 54 characters.
 - `STUDENT_ID` must start with `A` (case-insensitive), followed by 7 digits and 1 letter (e.g. `A0123456X`). Stored in uppercase.
 - `EMAIL` must follow NUS email format with constraints:
   - Must be of the format `local-part@u.nus.edu` (domain is strictly `u.nus.edu`)
   - The local-part should only contain alphanumeric characters and special characters: `+`, `_`, `.`, `-`
   - Each special character must be surrounded by alphanumeric characters (no consecutive special characters, cannot start or end with a special character)
+  - The local-part must be at most 50 characters long
   - Examples: 
     - Valid: `john.doe@u.nus.edu`, `alice+sem1@u.nus.edu`
     - Invalid: `john..doe@u.nus.edu`, `.john@u.nus.edu`, `alice@gmail.com`
@@ -137,7 +138,8 @@ If an invalid email is supplied:
 <code>Emails should be of the format local-part@u.nus.edu and adhere to the following constraints:<br>
 1. The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (+_.-).<br>
 2. Each special character must be surrounded by alphanumeric characters (i.e. the local-part cannot start or end with a special character, and cannot contain consecutive special characters).<br>
-3. The domain must be exactly u.nus.edu.</code>
+3. The local-part must be at most 50 characters long.<br>
+4. The domain must be exactly u.nus.edu.</code>
 </div>
 
 If an invalid student ID is supplied:
