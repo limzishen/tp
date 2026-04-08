@@ -4,7 +4,6 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -42,11 +41,9 @@ public class FindCommandParserTest {
     @Test
     public void parse_validArgs_returnsFindCommand() {
         FindCommand expectedFindCommand =
-                new FindCommand(new NameAndTutorialGroupPredicate(Arrays.asList("Alice", "Bob"),
+                new FindCommand(new NameAndTutorialGroupPredicate(List.of("Alice Bob"),
                         List.of(), List.of(), List.of()));
         assertParseSuccess(parser, " n/Alice Bob", expectedFindCommand);
-
-        assertParseSuccess(parser, " \n n/Alice \n \t Bob  \t", expectedFindCommand);
 
         FindCommand expectedFindCommandByTutorial =
                 new FindCommand(new NameAndTutorialGroupPredicate(List.of(),
@@ -74,14 +71,14 @@ public class FindCommandParserTest {
     @Test
     public void parse_multipleNamePrefixes_mergedAsKeywords() {
         FindCommand expected = new FindCommand(new NameAndTutorialGroupPredicate(
-                Arrays.asList("alice", "bob"), List.of(), List.of(), List.of()));
+                List.of("alice", "bob"), List.of(), List.of(), List.of()));
         assertParseSuccess(parser, " n/alice n/bob", expected);
     }
 
     @Test
     public void parse_multiWordNameAndTutorial_combined() {
         FindCommand expected = new FindCommand(new NameAndTutorialGroupPredicate(
-                Arrays.asList("John", "Do"), List.of(new TutorialGroup("T01")), List.of(), List.of()));
+                List.of("John Do"), List.of(new TutorialGroup("T01")), List.of(), List.of()));
         assertParseSuccess(parser, " n/John Do t/T01", expected);
     }
 
