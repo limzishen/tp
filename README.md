@@ -70,20 +70,37 @@ Example: `delete 2` — deletes the 2nd student in the **currently displayed** l
 ### 3. Find Students
 
 ```
-find [n/<NAME_KEYWORD> [MORE_KEYWORDS]...] [t/<TUTORIAL_GROUP>]...
+find [n/<NAME_KEYWORD>] [t/<TUTORIAL_GROUP>] [e/<EMAIL>] [th/<TELE_HANDLE>]
 ```
 
-At least one of `n/` or `t/` must be present. After `n/`, you can type **one or more words** (separated by spaces); each word matches the **start** of some part of the student’s name, and **all** words must match. Letter case is ignored. Add `t/` in the same command to filter by tutorial group. Multiple `t/` values are allowed as in the full user guide.
+At least one of `n/`, `t/`, `e/`, or `th/` must be present. Filters can be combined.
+
+**Name filter:** Each search term matches the **start** of any word in the student's name (case-insensitive).
+- Example: `find n/john` matches "John Doe"
+
+**Tutorial group filter:**
+- Example: `find t/T01` finds all students in tutorial group T01
+
+**Email & Telegram handle filters:** Prefix matching (case-insensitive).
+- Example: `find e/cha` matches `charlotte@u.nus.edu`; `find th/@ro` matches `@roybala`
+
+**Combined filters:**
+- Same field type (multiple `n/` fields): **OR** logic
+- Different field types: **AND** logic
+- Example: `find n/john t/T01` finds students named "john" **in** T01
 
 Examples:
 - `find n/John`
 - `find n/John Do`
 - `find t/T01`
+- `find e/alice@u.nus.edu`
 - `find n/john t/T01`
 
 ---
 
 ### 4. Mark Attendance
+
+CLI-Tacts supports three ways to mark attendance for a given week (1–13):
 
 **One student** (index is relative to the **current** filtered list):
 
@@ -93,6 +110,14 @@ mark INDEX w/<WEEK>
 
 Example: `mark 1 w/3`
 
+**Multiple students** (space-separated indices):
+
+```
+mark INDEX1 INDEX2 ... w/<WEEK>
+```
+
+Example: `mark 1 2 3 w/5` — marks students at positions 1, 2, 3. Students already marked are **skipped** (no error).
+
 **All students in a tutorial group** (everyone in storage with that group; does not depend on `find`):
 
 ```
@@ -101,11 +126,57 @@ mark t/<TUTORIAL_GROUP> w/<WEEK>
 
 Example: `mark t/T02 w/2` — marks all students in `T02` for week 2. Already-marked students for that week are **skipped** (no error). If no student has that group, an error is shown.
 
-For the single-student form, marking the same student twice for the same week **errors**. Tutorial groups use `T` plus two digits (e.g. `T01`, `T12`).
+Tutorial groups use `T` plus two digits (e.g. `T01`, `T12`).
 
 ---
 
-### 5. Other Commands
+### 5. Unmark Attendance
+
+**Unmark one student** (by index):
+
+```
+unmark INDEX w/<WEEK>
+```
+
+Example: `unmark 1 w/2` — unmarks the 1st student for week 2.
+
+**Unmark all students in a tutorial group:**
+
+```
+unmark t/<TUTORIAL_GROUP> w/<WEEK>
+```
+
+Example: `unmark t/T01 w/4` — unmarks all students in T01 for week 4.
+
+---
+
+### 6. Attendance Statistics Panel
+
+The attendance statistics panel at the bottom of the main window shows:
+- Attendance rate per tutorial group for each week (W1–W13)
+- Overall attendance rate per group
+- Global attendance statistics
+
+The panel updates automatically whenever the student list changes.
+
+---
+
+### 7. Export Student Data
+
+```
+export
+```
+
+Exports all student data to a CSV file named `export.csv` in the same folder as the JAR file.
+
+The CSV contains columns: Student, StudentID, Email, Tutorial, Week1–Week13
+- Each week column shows `1` (present) or `0` (absent)
+- The export includes **all** students regardless of any active `find` filter
+- If `export.csv` exists, it will be overwritten
+
+---
+
+### 8. Other Commands
 
 - **List:** `list` — show all students
 - **Edit:** `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]` — at least one field required
@@ -115,7 +186,13 @@ For the single-student form, marking the same student twice for the same week **
 
 ---
 
-### 6. Auto-Save
+### Command History
+
+Press `↑` (Up Arrow) to cycle to older commands, or `↓` (Down Arrow) to cycle to newer commands. This makes it easy to repeat and edit recently used commands.
+
+---
+
+### 9. Auto-Save
 
 All data-changing commands save automatically. By default the address book is stored at **`data/addressbook.json`** (under the app’s home folder).
 If the data file is missing, CLI-Tacts initializes it from **`data/addressbook.sample.json`**.
@@ -126,13 +203,17 @@ If the data file is missing, CLI-Tacts initializes it from **`data/addressbook.s
 
 | Action | Format |
 |--------|--------|
-| Add | `add n/NAME i/STUDENT_ID e/EMAIL p/PHONE th/TELE_HANDLE t/TUTORIAL_GROUP` |
+| Add | `add n/NAME i/STUDENT_ID e/EMAIL p/PHONE [th/TELE_HANDLE] t/TUTORIAL_GROUP` |
 | Delete | `delete INDEX` |
 | Edit | `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]` |
-| Find | `find` with at least one of `n/` or `t/` (see above) |
+| Find | `find [n/NAME] [t/TUTORIAL_GROUP] [e/EMAIL] [th/TELE_HANDLE]` |
 | List | `list` |
 | Mark (one) | `mark INDEX w/WEEK` |
+| Mark (multiple) | `mark INDEX1 INDEX2 ... w/WEEK` |
 | Mark (group) | `mark t/TUTORIAL_GROUP w/WEEK` |
+| Unmark (one) | `unmark INDEX w/WEEK` |
+| Unmark (group) | `unmark t/TUTORIAL_GROUP w/WEEK` |
+| Export | `export` |
 | Clear | `clear` |
 | Help | `help` |
 | Exit | `exit` |
