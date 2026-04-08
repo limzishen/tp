@@ -27,7 +27,7 @@ The primary users are **CS2040S Teaching Assistants** who:
 1. Copy the file to the folder you want to use as the _home folder_ for CLI-Tacts.
 
 1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar CLI-tacts.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
+   A GUI similar to the below should appear in a few seconds. If this is your first time using CLI-Tacts (or no existing data file is found), the app starts with sample data so you can try commands immediately.<br>
    ![Ui](images/Ui.png)
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing `help` and pressing Enter will open the help window containing the link to this user guide.<br>
@@ -83,7 +83,6 @@ Shows a message explaining how to access the help page.
 
 Format: `help`
 
-
 ### Adding a person: `add`
 
 Adds a student to CLI-Tacts. Telegram handle is optional (useful for contacting students quickly, but not required).
@@ -116,51 +115,73 @@ Examples:
 
 Here are some examples of error messages if the command entered is invalid:
 
+<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
+
 If any non-optional field (`n/`, `i/`, `e/`, `p/`, `t/`) is missing, CLI-Tacts shows the usage message:
 
-> Invalid command format!
-> add: Adds a person to the address book. Parameters: n/NAME i/STUDENT_ID e/EMAIL p/PHONE [th/TELE_HANDLE] t/TUTORIAL_GROUP
-> Example: add n/John Doe i/A0123456X e/johnd@u.nus.edu p/98765432 th/@john_doe t/T01
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid command format!<br>
+add: Adds a person to the address book. Parameters: n/NAME i/STUDENT_ID e/EMAIL p/PHONE [th/TELE_HANDLE] t/TUTORIAL_GROUP<br>
+Example: add n/John Doe i/A0123456X e/johnd@u.nus.edu p/98765432 th/@john_doe t/T01</code>
+</div>
 
 If an invalid name is supplied:
 
-> Names should only contain alphanumeric characters, spaces, hyphens, commas, and apostrophes. The first character must be alphanumeric.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Names should only contain alphanumeric characters, spaces, hyphens, commas, and apostrophes. The first character must be alphanumeric.</code>
+</div>
 
 If an invalid email is supplied:
 
-> Emails should be of the format local-part@u.nus.edu and adhere to the following constraints:
-> 1. The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (+_.-).
-> 2. Each special character must be surrounded by alphanumeric characters (i.e. the local-part cannot start or end with a special character, and cannot contain consecutive special characters).
-> 3. The domain must be exactly u.nus.edu.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Emails should be of the format local-part@u.nus.edu and adhere to the following constraints:<br>
+1. The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (+_.-).<br>
+2. Each special character must be surrounded by alphanumeric characters (i.e. the local-part cannot start or end with a special character, and cannot contain consecutive special characters).<br>
+3. The domain must be exactly u.nus.edu.</code>
+</div>
 
 If an invalid student ID is supplied:
 
-> Invalid Student ID! Use 'A', 7 digits, and one letter (e.g. A0123456X). Letters are case-insensitive; stored in uppercase.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid Student ID! Use 'A', 7 digits, and one letter (e.g. A0123456X). Letters are case-insensitive; stored in uppercase.</code>
+</div>
 
 If an invalid phone number is supplied:
 
-> Phone numbers should only contain numbers, and it should be exactly 8 digits long
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Phone numbers should only contain numbers, and it should be exactly 8 digits long</code>
+</div>
 
 If an invalid Telegram handle is supplied:
 
-> Telegram handle should start with '@' and be 5 to 32 characters long (letters, numbers, underscores).
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Telegram handle should start with '@' and be 5 to 32 characters long (letters, numbers, underscores).</code>
+</div>
 
 If an invalid tutorial group is supplied:
 
-> Tutorial group should start with 'T' followed by exactly 2 digits (e.g. T01, T12)
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Tutorial group should start with 'T' followed by exactly 2 digits (e.g. T01, T12)</code>
+</div>
 
 If a student with the same student ID already exists:
 
-> This ID already exists in the address book
-
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This ID already exists in the address book</code>
+</div>
 If a student with the same email already exists:
 
-> This email is already used by another person.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This email is already used by another person.</code>
+</div>
 
 If a student with the same phone number already exists:
 
-> This phone number is already used by another person.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This phone number is already used by another person.</code>
+</div>
 
+</div>
 ### Listing all persons : `list`
 
 Shows a list of all students currently in CLI-Tacts.
@@ -189,30 +210,44 @@ Examples:
 
 Here are some examples of error messages if the command entered is invalid:
 
+<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
+
 If the index is missing or invalid, CLI-Tacts shows the usage message:
 
-> Invalid command format!
-> edit: Edits the details of the person identified by the index number used in the displayed person list. Existing values will be overwritten by the input values.
-> Parameters: INDEX (must be a positive integer) [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]
-> Example: edit 1 n/John Doe i/A0123456X e/johndoe@u.nus.edu p/91234567 th/@john_doe
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid command format!<br>
+edit: Edits the details of the person identified by the index number used in the displayed person list. Existing values will be overwritten by the input values.<br>
+Parameters: INDEX (must be a positive integer) [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]<br>
+Example: edit 1 n/John Doe i/A0123456X e/johndoe@u.nus.edu p/91234567 th/@john_doe</code>
+</div>
 
 If no field is provided, CLI-Tacts shows an error similar to:
 
-> At least one field to edit must be provided.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>At least one field to edit must be provided.</code>
+</div>
 
 If the edited values result in a duplicate student ID, CLI-Tacts shows an error similar to:
 
-> This student ID is already used by another person.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This student ID is already used by another person.</code>
+</div>
 
 If the edited values result in a duplicate email, CLI-Tacts shows an error similar to:
 
-> This email is already used by another person.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This email is already used by another person.</code>
+</div>
 
 If the edited values result in a duplicate phone number, CLI-Tacts shows an error similar to:
 
-> This phone number is already used by another person.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This phone number is already used by another person.</code>
+</div>
 
 If any field value is invalid, CLI-Tacts shows the corresponding constraint message (same as in `add`).
+
+</div>
 
 ### Locating students by name, tutorial group, email, or telegram handle: `find`
 
@@ -235,7 +270,11 @@ At least one of `n/`, `t/`, `e/`, or `th/` must be present.
 
 If an invalid name is supplied, CLI-Tacts shows an error similar to:
 
-> Invalid name! Search terms should only contain alphanumeric characters, spaces, hyphens (-), commas (,), and apostrophes (') only.
+<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid name! Search terms should only contain alphanumeric characters, spaces, hyphens (-), commas (,), and apostrophes (') only.</code>
+</div>
+</div>
 
 Example after applying `find n/Ale`:
 
@@ -247,7 +286,11 @@ Example after applying `find n/Ale`:
 
 If an invalid tutorial group is supplied, CLI-Tacts shows an error similar to:
 
-> Invalid tutorial group. Format should be T followed by two digits (e.g., T01).
+<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid tutorial group. Format should be T followed by two digits (e.g., T01).</code>
+</div>
+</div>
 
 Example after applying `find t/T02`:
 
@@ -307,16 +350,24 @@ Examples:
 
 Here are some examples of error messages if the command entered is invalid:
 
+<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
+
 If the index is missing or invalid format, CLI-Tacts shows the usage message:
 
-> Invalid command format!
-> delete: Deletes the person identified by the index number used in the displayed person list.
-> Parameters: INDEX (must be a positive integer)
-> Example: delete 1
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid command format!<br>
+delete: Deletes the person identified by the index number used in the displayed person list.<br>
+Parameters: INDEX (must be a positive integer)<br>
+Example: delete 1</code>
+</div>
 
 If the index is out of bounds, CLI-Tacts shows an error similar to:
 
-> This person's index provided is invalid.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This person's index provided is invalid.</code>
+</div>
+
+</div>
 
 ### Marking attendance : `mark`
 
@@ -378,32 +429,46 @@ Example (whole group):
 
 Here are some examples of error messages if the command entered is invalid:
 
+<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
+
 If the command format is invalid or missing required parameters, CLI-Tacts shows the usage message:
 
-> Invalid command format!
-> mark: Marks attendance for one or more persons by list index, or for everyone in a tutorial group.
-> Parameters (single): INDEX (positive integer) w/WEEK (positive integer)
-> Parameters (multiple): INDEX1 INDEX2 ... (positive integers) w/WEEK (positive integer)
-> Parameters (group): t/TUTORIAL_GROUP w/WEEK (positive integer)
-> Example (single): mark 1 w/2
-> Example (multiple): mark 1 2 3 w/2
-> Example (group): mark t/T02 w/2
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid command format!<br>
+mark: Marks attendance for one or more persons by list index, or for everyone in a tutorial group.<br>
+Parameters (single): INDEX (positive integer) w/WEEK (positive integer)<br>
+Parameters (multiple): INDEX1 INDEX2 ... (positive integers) w/WEEK (positive integer)<br>
+Parameters (group): t/TUTORIAL_GROUP w/WEEK (positive integer)<br>
+Example (single): mark 1 w/2<br>
+Example (multiple): mark 1 2 3 w/2<br>
+Example (group): mark t/T02 w/2</code>
+</div>
 
 If an index is out of bounds, CLI-Tacts shows an error similar to:
 
-> This person's index provided is invalid.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This person's index provided is invalid.</code>
+</div>
 
 If a student has already been marked for the specified week:
 
-> X has already been marked as attended for week Y.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>X has already been marked as attended for week Y.</code>
+</div>
 
 If the week is not in the range 1–13:
 
-> Week must be a positive integer between 1 to 13.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Week must be a positive integer between 1 to 13.</code>
+</div>
 
 If a tutorial group has no students (for group mark):
 
-> No students found in tutorial group X.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>No students found in tutorial group X.</code>
+</div>
+
+</div>
 
 ### Unmarking attendance : `unmark`
 
@@ -436,33 +501,59 @@ Examples:
 
 Here are some examples of error messages if the command entered is invalid:
 
+<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
+
 If the command format is invalid or missing required parameters, CLI-Tacts shows the usage message:
 
-> Invalid command format!
-> unmark: Unmarks the person identified by the index number used in the displayed person list as attended, or unmarks the entire tutorial group.
-> Parameters: INDEX (must be a positive integer) w/WEEK (must be a positive integer)
-> OR: t/TUTORIAL_GROUP w/WEEK (must be a positive integer)
-> Examples: unmark 1 w/2, unmark t/T01 w/2
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Invalid command format!<br>
+unmark: Unmarks the person identified by the index number used in the displayed person list as attended, or unmarks the entire tutorial group.<br>
+Parameters: INDEX (must be a positive integer) w/WEEK (must be a positive integer)<br>
+OR: t/TUTORIAL_GROUP w/WEEK (must be a positive integer)<br>
+Examples: unmark 1 w/2, unmark t/T01 w/2</code>
+</div>
 
 If an index is out of bounds, CLI-Tacts shows an error similar to:
 
-> This person's index provided is invalid.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This person's index provided is invalid.</code>
+</div>
 
 If a student has already been unmarked for the specified week:
 
-> This person has already been unmarked as attended for this week.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>This person has already been unmarked as attended for this week.</code>
+</div>
 
 If the week is not in the range 1–13:
 
-> Week must be a positive integer between 1 to 13.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>Week must be a positive integer between 1 to 13.</code>
+</div>
 
 If a tutorial group has no students (for group unmark):
 
-> No persons found in tutorial group: X.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>No persons found in tutorial group: X.</code>
+</div>
 
 If all students in the tutorial group are already unmarked for that week:
 
-> All persons in tutorial group X are already unmarked for week Y.
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
+<code>All persons in tutorial group X are already unmarked for week Y.</code>
+</div>
+
+</div>
+
+### Navigating command history (terminal-style)
+
+CLI-Tacts supports terminal-like command history navigation in the command box:
+
+- Press `↑` (Up Arrow) to cycle to older previously executed commands.
+- Press `↓` (Down Arrow) to cycle forward to newer commands.
+- Pressing `↓` beyond the most recent history entry restores your current draft input.
+
+This makes it easy to repeat and edit recently used commands quickly without retyping.
 
 ### Clearing all entries : `clear`
 
