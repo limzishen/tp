@@ -210,15 +210,19 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *` | CS2040S Teaching Assistant | edit a student’s contact details | keep records accurate when details change |
 | `* * *` | CS2040S Teaching Assistant | delete a student by their index in the displayed list | remove students who drop the module or switch classes |
 | `* * *` | CS2040S Teaching Assistant | find students by name (partial match) | locate a student quickly during class |
+| `* * *` | CS2040S Teaching Assistant | find students by tutorial group, email, or telegram handle | locate a student using different criteria |
+| `* * *` | CS2040S Teaching Assistant | combine multiple find filters in one command | narrow down student search results precisely |
 | `* * *` | CS2040S Teaching Assistant | list all students | get an overview of who is under my care |
-| `* * *` | CS2040S Teaching Assistant | filter the student list by tutorial group | focus only on the current class I’m teaching |
+| `* * *` | CS2040S Teaching Assistant | filter the student list by tutorial group | focus only on the current class I'm teaching |
 | `* * *` | CS2040S Teaching Assistant | mark a student as present for a specific week | track attendance quickly during live tutorials |
 | `* * *` | CS2040S Teaching Assistant | mark multiple specific students in one command | record attendance for selected students without repeating single-student marks |
 | `* * *` | CS2040S Teaching Assistant | mark every student in a tutorial group for a week in one command | record whole-class attendance without repeating single-student marks |
 | `* * *` | CS2040S Teaching Assistant | unmark a student's attendance for a specific week | correct attendance mistakes quickly during live tutorials |
-| `* *` | CS2040S Teaching Assistant | view students with low attendance | identify students who may need follow-up |
+| `* * *` | CS2040S Teaching Assistant | unmark every student in a tutorial group for a week in one command | correct bulk attendance mistakes without repeating single-student unmarks |
+| `* *` | CS2040S Teaching Assistant | navigate through command history using arrow keys | repeat or modify previous commands quickly without retyping |
+| `* *` | CS2040S Teaching Assistant | view an attendance statistics panel by tutorial group | monitor attendance rates at a glance |
 | `* *` | CS2040S Teaching Assistant | export student and attendance records to a CSV | back up data or submit attendance reports |
-| `*` | CS2040S Teaching Assistant | archive or clear a semester’s data | reset the app cleanly for a new semester |
+| `*` | CS2040S Teaching Assistant | clear all entries from the application | reset the app cleanly for a new semester |
 
 ### Use cases
 
@@ -251,24 +255,90 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. User requests to add a student, providing name, student ID, email, phone, tele handle, and tutorial group (e.g. `T01`).
-2. CLI-Tacts validates all fields.
-3. CLI-Tacts adds the student and saves the data locally.
-4. CLI-Tacts displays a success message with the student's details.
+1. User requests to add a student, providing name, student ID, email, phone, Telegram handle (optional), and tutorial group (e.g. `add n/John Doe i/A0123456X e/john@u.nus.edu p/98765432 th/@johndoe t/T01`).
+2. CLI-Tacts validates all required fields are present and in correct format.
+3. CLI-Tacts checks that the student ID, email, and phone are not already in use.
+4. CLI-Tacts adds the student to the address book and saves the data locally.
+5. CLI-Tacts displays a success message with the student's details.
 
       Use case ends.
 
 **Extensions**
 
-1a. Required field missing or invalid (including invalid tutorial group format).
-   1a1. CLI-Tacts shows an error message.
+* 1a. User omits any required field (`n/`, `i/`, `e/`, `p/`, `t/`).
+    * 1a1. CLI-Tacts shows the command format with an error message.
+
+      Use case ends.
+
+* 2a. Any field has an invalid format (e.g., invalid name, invalid student ID, invalid email, invalid phone, invalid tutorial group, invalid Telegram handle).
+    * 2a1. CLI-Tacts shows a specific error message describing the constraint violation.
+
+      Use case ends.
+
+* 3a. A student with the same student ID already exists.
+    * 3a1. CLI-Tacts shows an error message: "This ID already exists in the address book".
+
+      Use case ends.
+
+* 3b. A student with the same email already exists.
+    * 3b1. CLI-Tacts shows an error message: "This email is already used by another person."
+
+      Use case ends.
+
+* 3c. A student with the same phone number already exists.
+    * 3c1. CLI-Tacts shows an error message: "This phone number is already used by another person."
+
+      Use case ends.
+
+**Use case: Edit student details**
+
+**MSS**
+
+1. User requests to view students (e.g. `list` or `find`).
+2. CLI-Tacts shows the student list.
+3. User requests to edit a specific student by index, providing one or more fields to update (e.g., `edit 2 p/99272758 e/newemail@u.nus.edu`).
+4. CLI-Tacts validates the provided fields.
+5. CLI-Tacts checks that new student ID, email, and phone (if provided) are not already in use by other students.
+6. CLI-Tacts updates the student's details and saves.
+7. CLI-Tacts displays a success message with the updated student details.
 
    Use case ends.
 
-2a. The student already exists in the address book (duplicate identity).
-   2a1. CLI-Tacts shows an error message.
+**Extensions**
 
-   Use case ends.
+* 2a. The list is empty.
+
+  Use case ends.
+
+* 3a. The given index is invalid.
+    * 3a1. CLI-Tacts shows an error message.
+
+      Use case resumes at step 2.
+
+* 3b. No field is provided for editing.
+    * 3b1. CLI-Tacts shows an error message: "At least one field to edit must be provided."
+
+      Use case resumes at step 3.
+
+* 4a. Any field has an invalid format.
+    * 4a1. CLI-Tacts shows a specific error message describing the constraint violation.
+
+      Use case resumes at step 3.
+
+* 5a. The new student ID is already used by another student.
+    * 5a1. CLI-Tacts shows an error message: "This student ID is already used by another person."
+
+      Use case resumes at step 3.
+
+* 5b. The new email is already used by another student.
+    * 5b1. CLI-Tacts shows an error message: "This email is already used by another person."
+
+      Use case resumes at step 3.
+
+* 5c. The new phone is already used by another student.
+    * 5c1. CLI-Tacts shows an error message: "This phone number is already used by another person."
+
+      Use case resumes at step 3.
 
 **Use case: Mark student attendance**
 
@@ -310,14 +380,37 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 2.
 
-* 3e. User marks an entire tutorial group with `mark t/TUTORIAL_GROUP w/WEEK`.
-    * 3e1. CLI-Tacts updates every student in storage with that tutorial group; already-marked students for that week are skipped.
-    * 3e2. CLI-Tacts reports counts of updated vs already-recorded students.
+**Use case: Mark tutorial group attendance**
+
+**MSS**
+
+1. User requests to mark all students in a tutorial group for a specific week (e.g., `mark t/T01 w/3`).
+2. CLI-Tacts validates the tutorial group format (T + 2 digits).
+3. CLI-Tacts checks that at least one student exists with that tutorial group in storage.
+4. CLI-Tacts marks each student in that tutorial group for the specified week; students already marked for that week are skipped without error.
+5. CLI-Tacts confirms the action and reports: how many students were newly marked and how many were already recorded for that week.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The tutorial group format is invalid (e.g., `t/T1` or `t/t01`).
+    * 2a1. CLI-Tacts shows an error message describing the valid format.
 
       Use case ends.
 
-* 3f. No student has the given tutorial group (group mark).
-    * 3f1. CLI-Tacts shows an error message.
+* 3a. No student in storage has the specified tutorial group.
+    * 3a1. CLI-Tacts shows an error message: "No students found in tutorial group X."
+
+      Use case ends.
+
+* 4a. The week number is invalid (not between 1 and 13).
+    * 4a1. CLI-Tacts shows an error message.
+
+      Use case resumes at step 1.
+
+* 4b. All students in the group are already marked for that week.
+    * 4b1. CLI-Tacts reports that 0 students were updated and all were already recorded.
 
       Use case ends.
 
@@ -351,28 +444,98 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
    Use case ends.
 
-**Use case: Search up student to view attendance record**
+**Use case: Find students**
+
 **MSS**
 
-1. User requests to find students by name keywords and/or tutorial group (e.g. `find`).
-2. CLI-Tacts updates the visible list to matching students.
-3. CLI-Tacts displays the student's profile, including a summary of their attendance (eg., "Present: 5/6 weeks").
-4. CLI-Tacts provides a visual breakdown of which specific weeks were attended.
+1. User requests to find students using one or more filters (e.g., `find n/john`, `find t/T01`, `find e/alice@`, `find th/@bot`).
+2. CLI-Tacts parses the command and validates filter formats.
+3. CLI-Tacts updates the displayed list to show only students matching all specified filter criteria.
+4. CLI-Tacts displays the filtered list with student details and index numbers.
 
    Use case ends.
 
 **Extensions**
 
-2a. No student matches the search criteria.
-   2a1. CLI-Tacts displays a "No results found" message.
+* 1a. User provides no filters.
+    * 1a1. CLI-Tacts shows an error: at least one filter must be specified.
+
+      Use case ends.
+
+* 2a. Any filter has invalid format (e.g., invalid tutorial group, invalid email prefix).
+    * 2a1. CLI-Tacts shows a specific error message.
+
+      Use case ends.
+
+* 3a. No student matches all the specified criteria.
+    * 3a1. CLI-Tacts displays an empty list with "0 persons listed!" message.
+
+      Use case ends.
+
+**Use case: List all students**
+
+**MSS**
+
+1. User requests to list all students (e.g., `list`).
+2. CLI-Tacts displays the complete student list with index numbers, names, student IDs, emails, phone numbers, Telegram handles (if present), and tutorial groups.
+3. The list is shown in the main display area.
 
    Use case ends.
 
-2b. Multiple students share the same name.
-   2b1. CLI-Tacts lists all matching students with their tutorial group IDs.
-   2b2. User selects the correct student by index.
+**Extensions**
 
-   Use case resumes at step 3.
+* 2a. No students are in the address book.
+    * 2a1. CLI-Tacts displays an empty list with "0 persons listed!" message.
+
+      Use case ends.
+
+**Use case: Clear all student data**
+
+**MSS**
+
+1. User requests to clear all entries (e.g., `clear`).
+2. CLI-Tacts immediately deletes all student records from the address book.
+3. CLI-Tacts saves the empty state to storage.
+4. CLI-Tacts displays confirmation message and shows an empty list.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. User provides any invalid syntax or arguments.
+    * 1a1. CLI-Tacts shows an error message: "Invalid command format! clear: Clears the address book."
+
+      Use case ends.
+
+**Use case: Export student data to CSV**
+
+**MSS**
+
+1. User requests to export all student data to CSV (e.g., `export`).
+2. CLI-Tacts validates the command.
+3. CLI-Tacts collects all student data (name, ID, email, tutorial group, attendance for weeks 1-13).
+4. CLI-Tacts creates a file named `export.csv` in the application's directory.
+5. CLI-Tacts writes all student records as CSV rows with proper formatting (quoted strings, comma-separated values).
+6. CLI-Tacts displays success confirmation message with file location.
+
+   Use case ends.
+
+**Extensions**
+
+* 3a. No students are in the address book.
+    * 3a1. CLI-Tacts still creates `export.csv` with only the header row (column names).
+
+      Use case ends.
+
+* 4a. The file `export.csv` already exists.
+    * 4a1. CLI-Tacts overwrites the existing file without prompting.
+
+      Use case ends.
+
+* 4b. The application lacks file write permissions in its directory.
+    * 4b1. CLI-Tacts shows an error message about file write failure.
+
+      Use case ends.
 
 ### Non-Functional Requirements
 

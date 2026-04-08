@@ -205,7 +205,7 @@ Format:
 
 Examples:
 
-*  `edit 2 p/99272758 e/berniceyu@u.nus.edu` Edits the phone number and email address of the 1st student.
+*  `edit 2 p/99272758 e/berniceyu@u.nus.edu` Edits the phone number and email address of the 2nd student.
 *  `edit 2 t/T03` Moves the 2nd student to tutorial group `T03`.
 
 ![edit command](images/editCommand.png)
@@ -267,16 +267,18 @@ At least one of `n/`, `t/`, `e/`, or `th/` must be present.
 
 #### Name (`n/`) filter
 
-* **Words after `n/`**: you can type **one or more words** separated by spaces. Each word is a **prefix** checked against the student’s full name (first name, last name, etc.); **every** word you type must match **some** name part. Letter case does not matter.
-* **With tutorial group**: use `t/` in the same command when you also want to filter by group (e.g. `find n/John t/T01`).
-
-If an invalid name is supplied, CLI-Tacts shows an error similar to:
-
-<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
-<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
-<code>Invalid name! Search terms should only contain alphanumeric characters, spaces, hyphens (-), commas (,), and apostrophes (') only.</code>
-</div>
-</div>
+* **How it works**: Each `n/` field is treated as a separate search term. A student matches if their name contains any of the search terms (OR logic between multiple `n/` fields).
+  - Each search term is matched as a **prefix** of any word in the student's full name (case-insensitive).
+  - Example: For a student named "John Doe":
+    - `find n/john` matches ✓ (the word "John" starts with "john")
+    - `find n/doe` matches ✓ (the word "Doe" starts with "doe")
+    - `find n/john doe` matches ✓ (words start with "john" and "doe")
+    - `find n/joh do` matches ✗ (no single word starts with the phrase "joh do")
+    - `find n/john n/ann` matches ✓ (name has "john" or "ann" as word prefixes)
+    - `find n/jane` does not match ✗ (no word starts with "jane")
+* **Multiple `n/` fields**: Using multiple `n/` fields lets you search for different names with OR logic.
+  - Example: `find n/john n/ann` matches students whose name contains **"john" OR "ann"** (as word prefixes).
+* **Case insensitive**: Letter case does not matter.
 
 Example after applying `find n/Ale`:
 
@@ -290,7 +292,7 @@ If an invalid tutorial group is supplied, CLI-Tacts shows an error similar to:
 
 <div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
-<code>Invalid tutorial group. Format should be T followed by two digits (e.g., T01).</code>
+<code>Tutorial group should start with 'T' followed by exactly 2 digits (e.g. T01, T12).</code>
 </div>
 </div>
 
@@ -300,7 +302,6 @@ Example after applying `find t/T02`:
 
 #### Email (`e/`) filter
 
-* **Input restrictions**: same format and case-sensitivity rules as `EMAIL` in `add` / `edit`.
 * **Prefix matching**: the value after `e/` is treated as a prefix match on email (case-insensitive).  
   For example, `find e/Cha` can match `charlotte@u.nus.edu`.
 
@@ -310,9 +311,8 @@ Example after applying `find e/Cha`:
 
 #### Telegram handle (`th/`) filter
 
-* **Input restrictions**: same format and case-sensitivity rules as `TELE_HANDLE` in `add` / `edit`.
-* **Prefix matching**: the value after `th/` is treated as a prefix match on Telegram handle (case-insensitive).  
-  For example, `find th/@ro` can match `@roybala`.
+* **Prefix matching**: the value after `th/` is treated as a prefix match on the full Telegram handle, **including the `@` symbol** (case-insensitive).  
+  For example, `find th/@ro` matches `@roybala` (both start with `@ro`).
 
 Example after applying `find th/@ro`:
 
@@ -320,19 +320,36 @@ Example after applying `find th/@ro`:
 
 #### Combined filters
 
-* When multiple filters are present, CLI-Tacts returns students who **match all specified filter categories** (AND across `n/`, `t/`, `e/`, `th/`).
+**Filter logic:**
+* **Same field type (e.g., multiple `n/` fields)**: OR logic — a student matches if they match **any** of the values.
+  - Example: `find n/john n/ann` matches students with "john" **OR** "ann" in their name.
+* **Different field types (e.g., `n/` and `t/`)**: AND logic — a student matches only if they match **all** specified categories.
+  - Example: `find n/john t/T01` matches students with "john" in their name **AND** in tutorial group T01.
 * On success, the status bar shows e.g. `5 persons listed!` and the list shows only matching students.
 * If no students match, the list becomes empty and the status shows `0 persons listed!`.
 
 Examples:
 * `find n/j` — finds students whose name has a part starting with `j`.
 * `find n/John` — finds students whose name has a part starting with `John`.
-* `find n/John Do` — finds students whose name has a part starting with `John` **and** a part starting with `Do`.
+* `find n/John Do` — finds students whose name has a part starting with `John` **and** a part starting with `Do` (within the same `n/` field).
+* `find n/john n/ann` — finds students whose name has "john" **OR** "ann" (different `n/` fields use OR).
 * `find t/T01` — finds all students from tutorial group `T01`.
 * `find e/alice@u.nus.edu` — finds the student with that email (if present).
 * `find th/@benson_meier` — finds the student with that Telegram handle (if present).
-* `find n/Tan` — finds students whose name has a part starting with `Tan`.
-* `find n/john t/T01` — finds students whose name matches `john` **and** who are in tutorial group `T01`.
+* `find n/john t/T01` — finds students with "john" **AND** in T01 (different field types use AND).
+* `find n/john t/T01 t/T02` — finds students with "john" **AND** in (T01 **OR** T02) (both AND and OR together).
+
+### Listing all students : `list`
+
+Lists all students in the address book.
+
+Format: `list`
+
+* Shows all students in the address book with their index numbers, names, student IDs, emails, phone numbers, Telegram handles (if present), and tutorial groups.
+* The attendance statistics panel at the bottom updates to show statistics for all students.
+
+Examples:
+* `list` — displays all students.
 
 ### Deleting a person : `delete`
 
@@ -670,7 +687,7 @@ Action | Format, Examples
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [i/STUDENT_ID] [e/EMAIL] [p/PHONE_NUMBER] [th/TELE_HANDLE] [t/TUTORIAL_GROUP]`<br> e.g.,`edit 2 n/James Lee t/T03`
 **Export** | `export`
-**Find** | `find [n/NAME [t/TUTORIAL_GROUP] [e/EMAIL] [th/TELE_HANDLE]`<br> e.g., `find n/James t/T01 e/james@u.nus.edu`
+**Find** | `find [n/NAME] [t/TUTORIAL_GROUP] [e/EMAIL] [th/TELE_HANDLE]`<br> e.g., `find n/James t/T01 e/james@u.nus.edu`
 **List** | `list`
 **Mark** | `mark INDEX w/WEEK`<br> `mark INDEX1 INDEX2 ... w/WEEK`<br> `mark t/TUTORIAL_GROUP w/WEEK`<br> e.g., `mark 1 w/2` or `mark 1 2 3 w/5` or `mark t/T02 w/2`
 **Unmark** | `unmark INDEX w/WEEK`<br> e.g., `unmark 1 w/2` or `unmark t/T01 w/2`

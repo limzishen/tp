@@ -41,7 +41,7 @@ public class NameAndTutorialGroupPredicate implements Predicate<Person> {
         }
 
         boolean matchesName = nameKeywords.isEmpty() || nameKeywords.stream()
-                .allMatch(keyword -> StringUtil.containsWordPrefixIgnoreCase(person.getName().fullName, keyword));
+                .anyMatch(keyword -> StringUtil.containsWordPrefixIgnoreCase(person.getName().fullName, keyword));
         boolean matchesTutorialGroup = tutorialGroups.isEmpty() || tutorialGroups.stream()
                 .anyMatch(group -> person.getTutorialGroup().value.equalsIgnoreCase(group.value));
         boolean matchesEmail = emailPrefixes.isEmpty() || emailPrefixes.stream()
