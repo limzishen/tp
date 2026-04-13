@@ -12,9 +12,9 @@ The primary users are **CS2040S Teaching Assistants** who:
 - need to **take attendance quickly** and look up student details on the spot
 - prefer keyboard-driven workflows during lab sessions
 
+* Table of Contents
 --------------------------------------------------------------------------------------------------------------------
 
-* Table of Contents
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
