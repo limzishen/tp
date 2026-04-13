@@ -116,7 +116,7 @@ public class FindCommandTest {
     public void execute_multipleNameKeywords_anyKeywordMatches() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
         NameAndTutorialGroupPredicate predicate = new NameAndTutorialGroupPredicate(
-                List.of("Daniel", "Ong"), List.of(), List.of(), List.of());
+                List.of("Daniel", "Me"), List.of(), List.of(), List.of());
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);

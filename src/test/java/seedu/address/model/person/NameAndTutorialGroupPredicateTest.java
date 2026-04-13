@@ -26,10 +26,10 @@ public class NameAndTutorialGroupPredicateTest {
         Person johnDoe = new PersonBuilder().withName("John Doe").withTutorialGroup("T01").build();
         Person johnOng = new PersonBuilder().withName("John Ong").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate predicate =
-                new NameAndTutorialGroupPredicate(List.of("John", "Jane"), List.of(), List.of(), List.of());
+                new NameAndTutorialGroupPredicate(List.of("John", "Do"), List.of(), List.of(), List.of());
 
         assertTrue(predicate.test(johnDoe));
-        assertTrue(predicate.test(johnOng)); // matches because "John" matches
+        assertFalse(predicate.test(johnOng)); // doesn't match because "Do" doesn't match "Ong"
     }
 
     @Test
@@ -76,7 +76,7 @@ public class NameAndTutorialGroupPredicateTest {
     public void test_multipleNameKeywordsAndTutorialGroup_anyNameMatchesAndTutorialMatches() {
         Person person = new PersonBuilder().withName("Alice Pauline").withTutorialGroup("T01").build();
         NameAndTutorialGroupPredicate match =
-                new NameAndTutorialGroupPredicate(List.of("Alice", "Bob"), List.of(new TutorialGroup("T01")),
+                new NameAndTutorialGroupPredicate(List.of("Alice", "Pau"), List.of(new TutorialGroup("T01")),
                         List.of(), List.of());
         assertTrue(match.test(person));
 

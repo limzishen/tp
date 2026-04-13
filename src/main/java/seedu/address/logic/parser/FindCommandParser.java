@@ -60,7 +60,7 @@ public class FindCommandParser implements Parser<FindCommand> {
             if (trimmedValue.isEmpty()) {
                 throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
             }
-            keywords.addAll(Arrays.asList(trimmedValue));
+            keywords.addAll(Arrays.asList(trimmedValue.split("\\s+")));
         }
         return keywords.stream().filter(value -> !value.isBlank()).collect(Collectors.toList());
     }

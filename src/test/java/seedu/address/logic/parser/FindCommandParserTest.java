@@ -41,7 +41,7 @@ public class FindCommandParserTest {
     @Test
     public void parse_validArgs_returnsFindCommand() {
         FindCommand expectedFindCommand =
-                new FindCommand(new NameAndTutorialGroupPredicate(List.of("Alice Bob"),
+                new FindCommand(new NameAndTutorialGroupPredicate(List.of("Alice", "Bob"),
                         List.of(), List.of(), List.of()));
         assertParseSuccess(parser, " n/Alice Bob", expectedFindCommand);
 
@@ -78,7 +78,7 @@ public class FindCommandParserTest {
     @Test
     public void parse_multiWordNameAndTutorial_combined() {
         FindCommand expected = new FindCommand(new NameAndTutorialGroupPredicate(
-                List.of("John Do"), List.of(new TutorialGroup("T01")), List.of(), List.of()));
+                List.of("John", "Do"), List.of(new TutorialGroup("T01")), List.of(), List.of()));
         assertParseSuccess(parser, " n/John Do t/T01", expected);
     }
 

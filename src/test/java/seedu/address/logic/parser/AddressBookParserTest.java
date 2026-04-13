@@ -98,7 +98,7 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_find() throws Exception {
-        List<String> keywords = List.of("foo bar baz");
+        List<String> keywords = List.of("foo", "bar", "baz");
         FindCommand command = (FindCommand) parser.parseCommand(
                 FindCommand.COMMAND_WORD + " n/foo bar baz");
         assertEquals(new FindCommand(new NameAndTutorialGroupPredicate(keywords, List.of(), List.of(), List.of())),
