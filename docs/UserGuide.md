@@ -11,9 +11,7 @@ The primary users are **CS2040S Teaching Assistants** who:
 - manage multiple tutorial or lab groups concurrently
 - need to **take attendance quickly** and look up student details on the spot
 - prefer keyboard-driven workflows during lab sessions
-
-## Table of Contents
-
+Table of contents
 --------------------------------------------------------------------------------------------------------------------
 
 {:toc}
