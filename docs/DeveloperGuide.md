@@ -587,7 +587,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Glossary
 
-* Application data directory: The folder on the user’s computer where CLI-Tacts stores its data file and preferences.
 
 * Command: A text instruction typed by the user into the command box to perform an action (e.g., add, delete, find, mark, unmark).
 
@@ -597,15 +596,13 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * Core features: The main functions needed for typical use in tutorials, including add, delete, edit, find, list, mark, unmark, clear, export, loading, and saving.
 
-* Dataset: The complete set of student records stored by the application at a given time.
+* CS2040S: A National University of Singapore (NUS) module on Data Structures and Algorithms. CLI-Tacts is designed specifically to assist Teaching Assistants managing student groups and attendance for this module.
 
-* Duplicate student id: A student id that matches an existing student id already stored in the application.
+* CSV files: Comma-Separated Values files, a simple text-based format for storing tabular data where each row represents a record and columns are separated by commas. CLI-Tacts uses CSV format for exporting student and attendance data.
 
 * Error message: A message displayed to inform the user that a command failed and to explain the reason for the failure.
 
 * Filtered list: A temporary view of the student list that shows only students matching certain criteria (e.g., search results or a tutorial group filter).
-
-* Frozen or unresponsive: A state where the user interface does not update and does not accept new input for more than 1 second.
 
 * Invalid command format: A command that does not match the required structure or is missing required prefixes or parameters.
 
@@ -617,25 +614,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * Offline: The application can be used without an internet connection and without relying on any online services.
 
-* Performance requirements: The response time and startup time targets defined in the non-functional requirements.
-
-* Response time: The time between when a user enters a command and when the application displays the resulting output and updates the interface.
-
 * Single-user operation: A usage model where the application is intended to be used by one user on one machine without concurrent access from multiple users.
 
 * Storage file: The local file used to store student records so that data persists between application sessions.
 
 * Structured format: A machine-readable data format with defined fields and structure, such as JSON.
 
-* Student record: A stored entry representing one student's details and attendance information.
-
 * Student id: The unique identifier for a student (e.g., A0123456X) used as the primary key for identifying a student in the application.
 
 * Tutorial group: A label used to group students by tutorial or lab session (e.g., T12) for filtering and attendance marking/unmarking.
-
-* Typical usage: Normal operation during a semester for a teaching assistant managing up to 200 students across multiple tutorial groups.
-
-
 
 * User guide: The documentation that explains how to use the application's commands and features.
 
