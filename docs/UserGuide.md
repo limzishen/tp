@@ -14,8 +14,7 @@ The primary users are **CS2040S Teaching Assistants** who:
 
 
 
-## Table of Contents
-
+* Table of Contents
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
