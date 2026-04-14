@@ -29,7 +29,9 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 ### Architecture
 
-<img src="images/ArchitectureDiagram.png" width="280" />
+<div class="diagram-scroll">
+  <img src="images/ArchitectureDiagram.png" alt="Architecture diagram of CLI-Tacts" />
+</div>
 
 The ***Architecture Diagram*** given above explains the high-level design of the App.
 
@@ -54,16 +56,20 @@ The bulk of the app's work is done by the following four components:
 
 The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
 
-<img src="images/ArchitectureSequenceDiagram.png" width="574" />
+<div class="diagram-scroll">
+  <img src="images/ArchitectureSequenceDiagram.png" alt="Sequence diagram for delete command" />
+</div>
 
 Each of the four main components (also shown in the diagram above),
 
 * defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
+* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point).
 
-For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
+For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent other components from being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
-<img src="images/ComponentManagers.png" width="300" />
+<div class="diagram-scroll">
+  <img src="images/ComponentManagers.png" alt="Component Manager classes" />
+</div>
 
 The sections below give more details of each component.
 
@@ -71,11 +77,13 @@ The sections below give more details of each component.
 
 The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
-![Structure of the UI Component](images/UiClassDiagram.png)
+<div class="diagram-scroll">
+  <img src="images/UiClassDiagram.png" alt="Structure of the UI Component" />
+</div>
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
+The UI consists of a `MainWindow` that is made up of parts e.g. `CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFX UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component,
 
@@ -90,7 +98,9 @@ The `UI` component,
 
 Here's a (partial) class diagram of the `Logic` component:
 
-<img src="images/LogicClassDiagram.png" width="550"/>
+<div class="diagram-scroll">
+  <img src="images/LogicClassDiagram.png" alt="Partial class diagram of the Logic component" />
+</div>
 
 The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
 
@@ -109,7 +119,9 @@ How the `Logic` component works:
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
-<img src="images/ParserClasses.png" width="600"/>
+<div class="diagram-scroll">
+  <img src="images/ParserClasses.png" alt="Parser classes in the Logic component" />
+</div>
 
 How the parsing works:
 * When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
@@ -118,7 +130,9 @@ How the parsing works:
 ### Model component
 **API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/model/Model.java)
 
-<img src="images/ModelClassDiagram.png" width="450" />
+<div class="diagram-scroll">
+  <img src="images/ModelClassDiagram.png" alt="Class diagram of the Model component" />
+</div>
 
 
 The `Model` component,
@@ -137,7 +151,9 @@ The `Model` component,
 
 **API** : [`Storage.java`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
-<img src="images/StorageClassDiagram.png" width="550" />
+<div class="diagram-scroll">
+  <img src="images/StorageClassDiagram.png" alt="Class diagram of the Storage component" />
+</div>
 
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
@@ -162,17 +178,18 @@ The `find` command is parsed by [`FindCommandParser`](https://github.com/AY2526S
 
 **Name (`n\`)**
 
-* The parser collects **all** whitespace-separated tokens from every `n\` argument (multiple `n\` prefixes are merged the same way as multiple words in one `n\` value). Each token is one **keyword**.
-* In `NameAndTutorialGroupPredicate`, **every** keyword must match: for each keyword, [`StringUtil#containsWordPrefixIgnoreCase`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/commons/util/StringUtil.java) must be true for the student's full name (the full name is split on whitespace into words; each keyword must be a non-empty prefix at the start of **at least one** word, case-insensitively). This is a logical **AND** across keywords. Mid-word substrings are not matched (e.g. `ohn` does not match `John`).
+* Search terms are **prefix-matched** against the words in each student's full name, **case-insensitively**. The full name is split on whitespace into words.
+* A student matches only if **all** provided search words match (**AND** logic): for every word, [`StringUtil#containsWordPrefixIgnoreCase`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/commons/util/StringUtil.java) must succeed on the full name. Each search word must be a prefix of **at least one** word in that name; mid-word substrings do not count (e.g. `ohn` does not match `John`).
+* Multiple `n\` fields are handled the same as writing all those words in a single `n\` value: the parser collects **all** whitespace-separated tokens from every `n\` argument into one keyword list.
 
 **Other filters**
 
 * `t\`: exact tutorial group string (case-insensitive for the value).
-* `e\` and `th\`: one or more prefix tokens each; [`StringUtil#startsWithIgnoreCase`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/commons/util/StringUtil.java) on email and optional Telegram handle respectively.
+* `e\` and `th\`: one or more prefix tokens each (OR within that filter type); [`StringUtil#startsWithIgnoreCase`](https://github.com/AY2526S2-CS2103T-T13-2/tp/tree/master/src/main/java/seedu/address/commons/util/StringUtil.java) on the full email string and on the optional Telegram handle respectively.
 
 **Combining filters**
 
-* When `n\`, `t\`, `e\`, and/or `th\` are all present, a student must satisfy **every** non-empty category (logical AND across categories).
+* When `n\`, `t\`, `e\`, and/or `th\` are used together, a student must match **every** category that has at least one token (logical **AND** across those categories).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -209,7 +226,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *` | CS2040S Teaching Assistant | add a student with name, student ID, email, phone, Telegram handle, and tutorial group | set up my tutorial groups at the start of the semester |
 | `* * *` | CS2040S Teaching Assistant | edit a student’s contact details | keep records accurate when details change |
 | `* * *` | CS2040S Teaching Assistant | delete a student by their index in the displayed list | remove students who drop the module or switch classes |
-| `* * *` | CS2040S Teaching Assistant | find students by name (partial match) | locate a student quickly during class |
+| `* * *` | CS2040S Teaching Assistant | find students by name (word-prefix match, case-insensitive) | locate a student quickly during class |
 | `* * *` | CS2040S Teaching Assistant | find students by tutorial group, email, or Telegram handle | locate a student using different criteria |
 | `* * *` | CS2040S Teaching Assistant | combine multiple find filters in one command | narrow down student search results precisely |
 | `* * *` | CS2040S Teaching Assistant | list all students | get an overview of who is under my care |
@@ -228,7 +245,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is the `CLI-Tacts` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a student**
+#### Use case: Delete a student
+<br>
 
 **MSS**
 
@@ -251,7 +269,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 2.
 
-**Use case: Add student to tutorial group**
+---
+
+#### Use case: Add student to tutorial group
+<br>
 
 **MSS**
 
@@ -271,7 +292,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case ends.
 
 * 1b. User specifies multiple values for a single-valued field (e.g., `n\John n\Doe` or `i\A0123456X i\A0123456Y`).
-    * 1b1. CLI-Tacts shows an error message: "Multiple values specified for the following single-valued field(s): [field]".
+    * 1b1. CLI-Tacts shows the duplicate-prefix error (`Multiple values specified for the following single-valued field(s):` …), listing the duplicated prefix(es).
 
       Use case ends.
 
@@ -281,7 +302,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case ends.
 
 * 3a. A student with the same student ID already exists.
-    * 3a1. CLI-Tacts shows an error message: "This student ID is already used by another student.".
+    * 3a1. CLI-Tacts shows an error message: "This student ID is already used by another student."
 
       Use case ends.
 
@@ -295,7 +316,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case ends.
 
-**Use case: Edit student details**
+---
+
+#### Use case: Edit student details
+<br>
 
 **MSS**
 
@@ -326,7 +350,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case resumes at step 3.
 
 * 3c. User specifies multiple values for a single-valued field (e.g., `n\John n\Doe` or `p\98765432 p\87654321`).
-    * 3c1. CLI-Tacts shows an error message: "Multiple values specified for the following single-valued field(s): [field]".
+    * 3c1. CLI-Tacts shows the duplicate-prefix error (`Multiple values specified for the following single-valued field(s):` …), listing the duplicated prefix(es).
 
       Use case resumes at step 3.
 
@@ -350,7 +374,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 3.
 
-**Use case: Mark student attendance**
+---
+
+#### Use case: Mark student attendance
+<br>
 
 **MSS**
 
@@ -391,13 +418,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case resumes at step 2.
 
 * 3e. User specifies multiple values for a single-valued field (e.g., `w\1 w\2`).
-    * 3e1. CLI-Tacts shows an error message: "Multiple values specified for the following single-valued field(s): w\".
+    * 3e1. CLI-Tacts shows the duplicate-prefix error (`Multiple values specified for the following single-valued field(s):` …), listing `w\` as a duplicated prefix.
 
       Use case resumes at step 2.
 
-      Use case resumes at step 2.
+---
 
-**Use case: Mark tutorial group attendance**
+#### Use case: Mark tutorial group attendance
+<br>
 
 **MSS**
 
@@ -417,17 +445,17 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case ends.
 
 * 3a. No student in storage has the specified tutorial group.
-    * 3a1. CLI-Tacts shows an error message: "No students found in tutorial group X."
+    * 3a1. CLI-Tacts shows an error message of the form `No students found in tutorial group T01.` (the tutorial group label is substituted; no colon after `group`).
 
       Use case ends.
 
 * 3b. User specifies multiple values for a single-valued field (e.g., `w\1 w\2` or `t\T01 t\T02`).
-    * 3b1. CLI-Tacts shows an error message: "Multiple values specified for the following single-valued field(s): [field]".
+    * 3b1. CLI-Tacts shows the duplicate-prefix error (`Multiple values specified for the following single-valued field(s):` …), listing the duplicated prefix(es).
 
       Use case ends.
 
 * 4a. The week number is invalid (not between 1 and 13).
-    * 4a1. CLI-Tacts shows an error message.
+    * 4a1. CLI-Tacts shows: `Week must be a positive integer between 1 and 13.`
 
       Use case resumes at step 1.
 
@@ -436,7 +464,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case ends.
 
-**Use case: Unmark student attendance**
+---
+
+#### Use case: Unmark student attendance
+<br>
 
 **MSS**
 
@@ -460,16 +491,19 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
    Use case resumes at step 2.
 
 * 3b. The student has already been unmarked for the specified week.
-  * 3b1. CLI-Tacts shows an error message: "This student has already been unmarked as attended for this week."
+  * 3b1. CLI-Tacts shows: `This student is already unmarked for this week.`
 
    Use case resumes at step 2.
 
 * 3c. User specifies multiple values for a single-valued field (e.g., `w\1 w\2`).
-  * 3c1. CLI-Tacts shows an error message: "Multiple values specified for the following single-valued field(s): w\".
+  * 3c1. CLI-Tacts shows the duplicate-prefix error (`Multiple values specified for the following single-valued field(s):` …), listing `w\` as a duplicated prefix.
 
    Use case resumes at step 2.
 
-**Use case: Unmark tutorial group attendance**
+---
+
+#### Use case: Unmark tutorial group attendance
+<br>
 
 **MSS**
 
@@ -489,17 +523,17 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case ends.
 
 * 3a. No student in storage has the specified tutorial group.
-    * 3a1. CLI-Tacts shows an error message: "No students found in tutorial group X."
+    * 3a1. CLI-Tacts shows an error message of the form `No students found in tutorial group: T01.` (colon after `group`; tutorial group label substituted).
 
       Use case ends.
 
 * 3b. User specifies multiple values for a single-valued field (e.g., `w\1 w\2` or `t\T01 t\T02`).
-    * 3b1. CLI-Tacts shows an error message: "Multiple values specified for the following single-valued field(s): [field]".
+    * 3b1. CLI-Tacts shows the duplicate-prefix error (`Multiple values specified for the following single-valued field(s):` …), listing the duplicated prefix(es).
 
       Use case ends.
 
 * 4a. The week number is invalid (not between 1 and 13).
-    * 4a1. CLI-Tacts shows an error message.
+    * 4a1. CLI-Tacts shows: `Week must be a positive integer between 1 and 13.`
 
       Use case resumes at step 1.
 
@@ -508,7 +542,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case ends.
 
-**Use case: Find students**
+---
+
+#### Use case: Find students
+<br>
 
 **MSS**
 
@@ -522,7 +559,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Extensions**
 
 * 1a. User provides no filters.
-    * 1a1. CLI-Tacts shows an error: at least one filter must be specified.
+    * 1a1. CLI-Tacts shows the invalid-format message (`Invalid command format!` plus a newline, then the full `find` usage text from `FindCommand.MESSAGE_USAGE`).
 
       Use case ends.
 
@@ -532,11 +569,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case ends.
 
 * 3a. No student matches all the specified criteria.
-    * 3a1. CLI-Tacts displays an empty list with "0 students listed!" message.
+    * 3a1. CLI-Tacts displays an empty list with status text `0 students listed!` (see `Messages#getPersonsListedOverview` in code).
 
       Use case ends.
 
-**Use case: List all students**
+---
+
+#### Use case: List all students
+<br>
 
 **MSS**
 
@@ -550,11 +590,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Extensions**
 
 * 2a. No students are in the address book.
-    * 2a1. CLI-Tacts displays an empty list with "0 students listed!" message.
+    * 2a1. CLI-Tacts displays an empty list. The status message is `Listed all students`.
 
       Use case ends.
 
-**Use case: Clear all student data**
+---
+
+#### Use case: Clear all student data
+<br>
 
 **MSS**
 
@@ -567,12 +610,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 1a. User provides any invalid syntax or arguments.
-    * 1a1. CLI-Tacts shows an error message: "Invalid command format! clear: Clears the address book."
+* 1a. User appends extra text after `clear` (e.g. `clear all`).
+    * 1a1. CLI-Tacts still executes `clear` and clears all data; the parser does not reject extra arguments (same idea as in the [User Guide](UserGuide.md) for commands that take no parameters).
 
       Use case ends.
 
-**Use case: Export student data to CSV**
+---
+
+#### Use case: Export student data to CSV
+<br>
 
 **MSS**
 
@@ -581,7 +627,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. CLI-Tacts collects all student data (name, ID, email, tutorial group, attendance for weeks 1-13).
 4. CLI-Tacts creates a file named `export.csv` in the application's directory.
 5. CLI-Tacts writes all student records as CSV rows with proper formatting (quoted strings, comma-separated values).
-6. CLI-Tacts displays success confirmation message with file location.
+6. CLI-Tacts displays a success message of the form `Exported N student(s) to: <file path>` (see `ExportCommand.MESSAGE_SUCCESS`).
 
    Use case ends.
 
@@ -606,7 +652,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Usability**
 1.  The system must be fully operable using keyboard-only commands without requiring mouse interaction.
-2.  All commands must follow a consistent prefix format (e.g., `n\`, `i\`, `e\`, `t\`) to ensure predictable command usage.
+2.  All commands must follow a consistent prefix format where applicable (e.g., `n\`, `i\`, `p\`, `e\`, `t\`, `th\`, `w\`) to ensure predictable command usage.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 4.  When a command fails, the system must provide clear and informative error messages explaining the issue and the correct command format.
 
@@ -654,7 +700,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * Command: A text instruction typed by the user into the command box to perform an action (e.g., add, delete, find, mark, unmark).
 
-* Command prefix: A token that identifies the value of a field in a command (e.g., n\ for name, i\ for student ID, e\ for email, t\ for tutorial group).
+* Command prefix: A token that identifies the value of a field in a command (e.g., `n\` name, `i\` student ID, `p\` phone, `e\` email, `t\` tutorial group, `th\` Telegram handle, `w\` week for mark/unmark).
 
 * Command result: The message returned by the system after executing a command, indicating success or failure.
 
@@ -674,7 +720,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * Mainstream OS: Windows, macOS, or Linux operating systems.
 
-* Modifying command: Any command that changes stored data (e.g., add, delete, mark, unmark, clear).
+* Modifying command: Any command that changes stored data (e.g., add, delete, edit, mark, unmark, clear).
 
 * Offline: The application can be used without an internet connection and without relying on any online services.
 
@@ -698,7 +744,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
+Given below are instructions to test some features of the app manually.
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions only provide a starting point for testers to work on;
 testers are expected to do more *exploratory* testing.
@@ -742,4 +788,7 @@ testers are expected to do more *exploratory* testing.
 
 **Team size:** 5
 
-1. **Allow clearing a student’s Telegram handle via `edit`:** Telegram is optional on `add`, but once a handle is saved there is still no supported way to remove it from the CLI. **Current behaviour (v1.6):** If the user supplies the prefix with **no value** after it (e.g. `edit 3 th\` or only spaces, after trimming), the app still feeds that argument through `TeleHandle` validation. The empty string is invalid, so the command **fails** and the status area shows: `Telegram handle should start with '@' followed by 5 to 32 characters (letters, numbers, underscores).` The student’s Telegram field is **unchanged** The only workarounds are to replace the handle with another valid one or to edit the JSON data file manually. **Planned change:** Treat a present `th\` prefix with a **trimmed-empty** value as an explicit instruction to **clear** the handle (store as absent / null, same as a student who never had one). Non-empty values will still use existing validation (e.g. `th\@` alone remains invalid). **Sample input (after fix):** `edit 3 th\` for a student who had `th\@alice_ta`. **Sample outcome:** Success message; Telegram hidden in the UI; save omits `TeleHandle` in JSON. Update the User Guide with the new rule and example.
+1. **Allow clearing a student’s Telegram handle via `edit`:** Telegram is optional on `add`, but once a handle is saved there is still no supported way to remove it from the CLI.<br><br>
+   **Current behaviour (v1.6):** If the user supplies the prefix with **no value** after it (e.g. `edit 3 th\` or only spaces, after trimming), the app still feeds that argument through `TeleHandle` validation. The empty string is invalid, so the command **fails** and the status area shows: `Telegram handle should start with '@' followed by 5 to 32 characters (letters, numbers, underscores).` (see `TeleHandle#MESSAGE_CONSTRAINTS`). The student’s Telegram field is **unchanged**.<br><br>
+   The only workarounds are to replace the handle with another valid one or to edit the JSON data file manually.<br><br>
+   **Planned change:** Treat a present `th\` prefix with a **trimmed-empty** value as an explicit instruction to **clear** the handle (store as absent / null, same as a student who never had one). Non-empty values will still use existing validation (e.g. `th\@` alone remains invalid). **Sample input (after fix):** `edit 3 th\` for a student who had `th\@alice_ta`. **Sample outcome:** Success message; Telegram hidden in the UI; save omits `TeleHandle` in JSON. Update the User Guide with the new rule and example.

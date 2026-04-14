@@ -32,3 +32,16 @@ h2, h3, h4, h5, h6 {
   }
 }
 
+// Wide diagrams: avoid shrinking class-diagram text to body column width (keeps intrinsic size; scroll on small screens)
+.diagram-scroll {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+
+  img {
+    display: block;
+    height: auto;
+    max-width: none !important;
+  }
+}
+
