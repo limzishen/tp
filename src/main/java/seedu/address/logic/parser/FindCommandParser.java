@@ -43,7 +43,6 @@ public class FindCommandParser implements Parser<FindCommand> {
                 .isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
-        System.out.print(nameKeywords);
         return new FindCommand(new NameAndTutorialGroupPredicate(
                 nameKeywords, tutorialGroups, emailPrefixes, teleHandlePrefixes));
     }
