@@ -32,16 +32,15 @@ h2, h3, h4, h5, h6 {
   }
 }
 
-// Wide diagrams: avoid shrinking class-diagram text to body column width (keeps intrinsic size; scroll on small screens)
-.diagram-scroll {
-  overflow-x: auto;
-  margin: 1.5rem 0;
-  -webkit-overflow-scrolling: touch;
-
-  img {
-    display: block;
-    height: auto;
-    max-width: none !important;
-  }
+// UML / class diagrams: allow a bit wider than the text column when needed (centered, viewport-capped)
+.post-content img.diagram-wide {
+  display: block;
+  width: min(100vw - 2rem, 1320px);
+  max-width: min(100vw - 2rem, 1320px);
+  height: auto;
+  margin: 1.5rem auto;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 

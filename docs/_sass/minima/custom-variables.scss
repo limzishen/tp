@@ -74,3 +74,6 @@ $alert-color-level:                 6 !default;
   $level: abs($level);
   @return mix($color-base, $color, $level * $theme-color-interval);
 }
+
+// Wider than default Minima 800px — more room for UML diagrams and long command examples
+$content-width: 1100px;
