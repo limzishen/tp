@@ -24,7 +24,7 @@ The primary users are **CS2040S Teaching Assistants** who:
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest CLI-Tacts `.jar` file:
+1. Download the latest `CLI-Tacts.jar` file:
    * Go to the [GitHub releases page](https://github.com/AY2526S2-CS2103T-T13-2/tp/releases).
    * Under the latest release, download the `.jar` file.
 
@@ -67,10 +67,10 @@ At all times, the displayed student list follows the order in which each student
 * Items in square brackets are optional.<br>
   e.g `n\NAME [th\TELE_HANDLE]` can be used as `n\John Doe th\@johndoe` or as `n\John Doe`.
 
-* Items with `…`​ after them can be used multiple times including zero times.<br>
+* Items with `…`​ after them can be used multiple times.<br>
   Currently, CLI-Tacts uses a **single tutorial group** per student, so you will not see repeated `t\` prefixes.
 
-* **Positional arguments must come first and in the specified order.**<br> `edit` and `delete` require `INDEX` as the first argument. `mark` and `unmark` accept either `INDEX` or `t/TUTORIAL_GROUP` as the first argument.<br> 
+* **Positional arguments must come first and in the specified order.**<br> `edit`, `mark`, `unmark` and `delete` require `INDEX` as the first argument if the `INDEX` parameter is required. <br> 
 e.g. `edit 1 n/John Doe` is valid, but `edit n/John Doe 1` is not. 
 
 * **Prefixed arguments can be in any order** for `add`, `edit`, `mark`, `unmark` and `find` commands, *after* any required positional argument.<br> 
@@ -89,7 +89,10 @@ Shows a message explaining how to access the help page.
 
 ![help message](images/helpMessage.png)
 
-Format: `help`
+#### Format
+```
+help
+```
 
 ### Adding a student: `add`
 
@@ -130,26 +133,28 @@ Only one occurrence of each command prefix (`n\`, `i\`, `e\`, `p\`, `th\`, `t\`)
 {: #add-possible-error-messages}
 #### Possible Error Messages
 
-<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
-
-**Missing required fields** — If any non-optional field (`n\`, `i\`, `e\`, `p\`, `t\`) is missing:
+**Missing required fields**
+If any non-optional field (`n\`, `i\`, `e\`, `p\`, `t\`) is missing:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Invalid command format!<br>
 add: Adds a student to the address book. Parameters: n\NAME i\STUDENT_ID e\EMAIL p\PHONE [th\TELE_HANDLE] t\TUTORIAL_GROUP<br>
 Example: add n\John Doe i\A0123456X e\johnd@u.nus.edu p\98765432 th\@john_doe t\T01</code>
 </div>
 
-**Duplicate field prefix** — If multiple values are specified for a single-valued field (e.g., `n\John n\Doe`):
+**Duplicate field prefix**
+If multiple values are specified for a single-valued field (e.g., `n\John n\Doe`):
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Multiple values specified for the following single-valued field(s): n\</code>
 </div>
 
-**Invalid name** — If an invalid name is supplied:
+**Invalid name**
+If an invalid name is supplied:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Names should only contain alphanumeric characters, spaces, forward slashes, hyphens, commas, and apostrophes. The first character must be alphanumeric. Names must be at most 54 characters long.</code>
 </div>
 
-**Invalid email** — If an invalid email is supplied:
+**Invalid email**
+If an invalid email is supplied:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Emails should be of the format local-part@u.nus.edu and adhere to the following constraints:<br>
 1. The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (+_.-).<br>
@@ -158,48 +163,54 @@ Example: add n\John Doe i\A0123456X e\johnd@u.nus.edu p\98765432 th\@john_doe t\
 4. The domain must be exactly u.nus.edu.</code>
 </div>
 
-**Invalid student ID** — If an invalid student ID is supplied:
+**Invalid student ID**
+If an invalid student ID is supplied:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Invalid Student ID! Use 'A', 7 digits, and one letter (e.g. A0123456X). Letters are case-insensitive; stored in uppercase.</code>
 </div>
 
-**Invalid phone number** — If an invalid phone number is supplied:
+**Invalid phone number**
+If an invalid phone number is supplied:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Phone numbers should only contain digits, and be between 3 and 15 digits long (inclusive).</code>
 </div>
 
 Note: As of **2026**, the shortest allowed length is **3** digits and the longest is **15** digits.
 
-**Invalid Telegram handle** — If an invalid Telegram handle is supplied:
+**Invalid Telegram handle**
+If an invalid Telegram handle is supplied:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Telegram handle should start with '@' followed by 5 to 32 characters (letters, numbers, underscores).</code>
 </div>
 
-**Invalid tutorial group** — If an invalid tutorial group is supplied:
+**Invalid tutorial group**
+If an invalid tutorial group is supplied:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Tutorial group should be 3 to 5 alphanumeric characters (letters or digits) inclusive. Letters are case-insensitive; stored in uppercase.</code>
 </div>
 
-**Duplicate student ID** — If a student with the same student ID already exists:
+**Duplicate student ID**
+If a student with the same student ID already exists:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This student ID is already used by another student.</code>
 </div>
 
-**Duplicate email** — If a student with the same email already exists:
+**Duplicate email**
+If a student with the same email already exists:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This email is already used by another student.</code>
 </div>
 
-**Duplicate phone number** — If a student with the same phone number already exists:
+**Duplicate phone number**
+If a student with the same phone number already exists:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This phone number is already used by another student.</code>
 </div>
 
-**Duplicate Telegram handle** — If a student with the same Telegram handle already exists:
+**Duplicate Telegram handle**
+If a student with the same Telegram handle already exists:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This Telegram handle is already used by another student.</code>
-</div>
-
 </div>
 
 ### Editing a student : `edit`
@@ -228,9 +239,8 @@ edit INDEX [n\NAME] [i\STUDENT_ID] [e\EMAIL] [p\PHONE] [th\TELE_HANDLE] [t\TUTOR
 {: #edit-possible-error-messages}
 #### Possible Error Messages
 
-<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
-
-**Invalid command format** — If the command is missing the index or is otherwise malformed:
+**Invalid command format**
+If the command is missing the index or is otherwise malformed:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Invalid command format!<br>
 edit: Edits the details of the student identified by the index number used in the displayed student list. Existing values will be overwritten by the input values.<br>
@@ -238,41 +248,48 @@ Parameters: INDEX (must be a positive integer) [n\NAME] [i\STUDENT_ID] [e\EMAIL]
 Example: edit 1 n\John Doe i\A0123456X e\johndoe@u.nus.edu p\91234567 th\@john_doe</code>
 </div>
 
-**Index out of bounds** — If the index is outside the valid range:
+**Index out of bounds**
+If the index is outside the valid range:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>The student index provided is invalid.</code>
 </div>
 
-**No fields provided**:
+**No fields provided**
+If no fields are provided for editing:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>At least one field to edit must be provided.</code>
 </div>
 
-**Duplicate student ID** — If the new student ID is already used by another student:
+**Duplicate student ID**
+If the new student ID is already used by another student:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This student ID is already used by another student.</code>
 </div>
 
-**Duplicate email** — If the new email is already used by another student:
+**Duplicate email**
+If the new email is already used by another student:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This email is already used by another student.</code>
 </div>
 
-**Duplicate phone number** — If the new phone number is already used by another student:
+**Duplicate phone number**
+If the new phone number is already used by another student:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This phone number is already used by another student.</code>
 </div>
 
-**Duplicate Telegram handle** — If the new Telegram handle is already used by another student:
+**Duplicate Telegram handle**
+If the new Telegram handle is already used by another student:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>This Telegram handle is already used by another student.</code>
 </div>
 
-**Invalid field value** — If any field value is invalid, refer to the [`add` command section](#adding-a-student-add) for the specific constraint message.
+**Invalid field value**
+If any field value is invalid, refer to the [`add` command section](#adding-a-student-add) for the specific constraint message.
 
-**Duplicate field prefix** — If multiple values are specified for a single-valued field (e.g., `n\John n\Doe`), refer to the corresponding error message in the [`add` command section](#add-possible-error-messages).
+**Duplicate field prefix**
+If multiple values are specified for a single-valued field (e.g., `n\John n\Doe`), refer to the corresponding error message in the [`add` command section](#add-possible-error-messages).
 
-</div>
 
 ### Locating students by name, tutorial group, email, or telegram handle: `find`
 
@@ -294,17 +311,18 @@ At least one of `n\`, `t\`, `e\`, or `th\` must be present.
 
 ##### Name filter (`n\`)
 
-* **How it works**: Each `n\` field is treated as a separate search term. A student matches if their name contains any of the search terms (OR logic between multiple `n\` fields).
-  — Each search term is matched as a **prefix** of any word in the student's full name (case-insensitive).
-  — Words are case-insensitive.
-* **Multiple `n\` fields**: Using multiple `n\` fields lets you search for different names with OR logic.
-  — Example: `find n\john n\ann` matches students whose name contains **"john" OR "ann"** (as word prefixes).
+* **How it works**: The words provided in the search input are used to perform a prefix match against the words in each student's full name, in a case-insensitive manner. A student matches only if all provided search words can be matched as prefixes of words in that student's name (AND logic).
+  * Each search word is compared against the student's name word by word.
+  * A search word is considered a match if it is a prefix of at least one word in the student's name.
+  * For the student to be returned, every search word must match at least one word in the name.
+  * Multiple `n\` fields are treated the same as if their contents were written in a single `n\` field.
+
 * **Examples**:
   — For a student named "John Doe":
     * `find n\john` matches ✓ (the word "John" starts with "john")
     * `find n\doe` matches ✓ (the word "Doe" starts with "doe")
     * `find n\john doe` matches ✓ (words start with "john" and "doe")
-    * `find n\joh do` matches ✗ (no single word starts with the phrase "joh do")
+    * `find n\joh do` matches ✓ (the word "John" starts with "joh" and the word "Doe" starts with "do") 
     * `find n\jane` does not match ✗ (no word starts with "jane")
 
 Example after applying `find n\Ale`:
@@ -313,7 +331,7 @@ Example after applying `find n\Ale`:
 
 ##### Tutorial group filter (`t\`)
 
-* **Input restrictions**: Same format as `TUTORIAL_GROUP` in `add` / `edit` (3–5 alphanumeric characters).
+* **Input restrictions**: Same format as [`TUTORIAL_GROUP` in `add` / `edit`](#adding-a-student-add) (3–5 alphanumeric characters).
 * **Case-insensitive**: Values are **stored in uppercase**; you may type any letter casing and filtering still matches.
 
 Example after applying `find t\T02`:
@@ -332,6 +350,8 @@ Example after applying `find e\Cha`:
 ##### Telegram handle filter (`th\`)
 
 * **Prefix matching**: The value after `th\` is treated as a prefix match on Telegram handle (case-insensitive).
+* **Input restrictions**: `@` have to be used as the first character of the handle else no students will be found.
+* **Quick tips**: Using `th\@` will show all the students with Telegram handles, which can be useful for quickly finding students to contact on Telegram.
 
 Example after applying `find th\@ro`:
 
@@ -341,18 +361,24 @@ Example after applying `find th\@ro`:
 
 * You can combine multiple filter types in one command to narrow results further.
   — Example: `find n\john t\T01` finds students named "john" who are also in tutorial group "T01".
+* Utilizes AND logic between different prefixes.
 
 {: #find-possible-error-messages}
 #### Possible Error Messages
 
-<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
-
-**Invalid tutorial group format**:
+**Invalid command format**
+If the command is missing the index or is otherwise malformed:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
-<code>Tutorial group should be 3 to 5 alphanumeric characters (letters or digits) inclusive. Letters are case-insensitive; stored in uppercase.</code>
+<code>Invalid command format!<br>
+find: Finds all students whose names match the given name prefixes (case-insensitive), and/or match tutorial group, email, or Telegram handle filters, and displays them as a list with index numbers.<br>
+Parameters: [n\NAME] [t\TUTORIAL_GROUP]... [e\EMAIL]... [th\TELE_HANDLE]...<br>
+At least one of n\, t\, e\, or th\ must be present.<br>
+Example: find n\alice t\T01 e\alice@u.nus.edu th\@alice<br>
+</code>
 </div>
 
-</div>
+**Invalid inputs**
+If any field value is invalid, refer to the [`add` command section](#adding-a-student-add) for the specific constraint message.
 
 ### Listing all students : `list`
 
@@ -396,9 +422,8 @@ delete INDEX
 {: #delete-possible-error-messages}
 #### Possible Error Messages
 
-<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
-
-**Invalid command format** — If index is missing or in invalid format:
+**Invalid command format**
+If index is missing or in invalid format:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Invalid command format!<br>
 delete: Deletes the student identified by the index number used in the displayed student list.<br>
@@ -406,10 +431,10 @@ Parameters: INDEX (must be a positive integer)<br>
 Example: delete 1</code>
 </div>
 
-**Index out of bounds** — If the index is outside the valid range:
+**Index out of bounds**
+If the index is outside the valid range:
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>The student index provided is invalid.</code>
-</div>
 </div>
 
 ### Marking attendance : `mark`
@@ -450,8 +475,6 @@ CLI-Tacts supports **three ways to mark attendance** for a given week (positive 
 {: #mark-possible-error-messages}
 #### Possible Error Messages
 
-<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
-
 **Invalid command format:**
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
 <code>Invalid command format!<br>
@@ -484,9 +507,8 @@ Example (group): mark t\ T02 w\ 2</code>
 <code>No students found in tutorial group X.</code>
 </div>
 
-**Duplicate field prefix** — If multiple values are specified for a single-valued field (e.g., `w\ 1 w\ 2`), refer to the corresponding error message in the [`add` command section](#add-possible-error-messages).
-
-</div>
+**Duplicate field prefix**
+If multiple values are specified for a single-valued field (e.g., `w\ 1 w\ 2`), refer to the corresponding error message in the [`add` command section](#add-possible-error-messages).
 
 ### Unmarking attendance : `unmark`
 
@@ -518,8 +540,6 @@ You cannot unmark multiple indices similar to mark, because unmark is likely for
 
 {: #unmark-possible-error-messages}
 #### Possible Error Messages
-
-<div style="border: 1px solid #bfbfbf; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px 0;">
 
 **Invalid command format:**
 <div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin: 8px 0;">
@@ -559,7 +579,6 @@ Examples: unmark 1 w\2, unmark t\T01 w\2</code>
 
 Refer to the corresponding error message in the [`add` command section](#add-possible-error-messages).
 
-</div>
 
 ### Attendance Statistics Panel
 
@@ -574,7 +593,7 @@ The **Attendance Statistics Panel** is displayed at the bottom of the main windo
 | **Tutorial Group** | The tutorial group code (e.g. `T01`). One row per group, sorted lexicographically. |
 | **W1 – W13** | The attendance rate for that tutorial group in each week, shown as a percentage of students present (e.g. `75%` means 3 out of 4 students were marked present). |
 | **Rate** | The overall attendance rate for that tutorial group across all 13 weeks combined. |
-| **Overall** (last row) | The attendance rate across **all** students and all weeks. Each week column shows the percentage of all students present that week; the Rate column shows the global average. |
+| **Overall** (last row) | The attendance rate across **all** students and all weeks present on the student list. Each week column shows the percentage of all students present that week; the Rate column shows the global average. |
 
 #### What to expect
 
